@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/TicketCreation.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}TicketSolution{% endblock %}
+
+{% block content %}
+
+<div class="signup-container">
+    <div class="left-container">
+        <h1>
+            <i class="fas fa-paw"></i>
+            TICKET DETAILS
+        </h1>
+        <div class="puppy">
+            <img src="https://www.pngmart.com/files/3/Software-PNG-Transparent-Image-420x264.png" />
+        </div>
+    </div>
+    
+    <div class="right-container">
+        <header>
+            <h1>les information de ticket</h1>
+            <div class="set">
+                <div class="prob-name">
+                    <label for="prob-name">Nom de Ticket</label>
+                    {{ targeted_ticket_form.title }}
+                </div>
+            </div>
+
+            <div class="set">
+                <div class="systemtype">
+                    <label for="systemtype">Actif Informatique Ciblé</label>
+                    {{ targeted_ticket_form.category }}
+                </div>
+
+                <div class="technic">
+                    <label for="technic">Technicien</label>
+                    {{ targeted_ticket_form.assigned_to }}
+                </div>
+
+                <div class="status">
+                    <label for="status">Status</label>
+                    {{ targeted_ticket_form.status }}
+                </div>
+            </div>
+
+            <div class="description">
+                <label for="description">description</label>
+                    {{ targeted_ticket_form.description }}
+            </div>
+
+            <div class="probprior">
+                <label for="priority-easy">Priority</label>
+                    <div class="radio-container">
+                        {{ targeted_ticket_form.priority }}
+                    </div>
+            </div>
+        </header>
+    </div>
+
+</div>
+
+<div class="signup-container">
+    <div class="left-container">
+        <h1>
+            <i class="fas fa-paw"></i>
+            TICKET SOLUTION
+        </h1>
+        <div class="puppy">
+            <img src="https://www.pngmart.com/files/3/Software-PNG-Transparent-Image-420x264.png" />
+        </div>
+    </div>
+
+    <form action="{% url 'add_solution_form' ticket_title=ticket_title %}" method="post">
+        {% csrf_token %}
+        <div class="right-container">
+            <header>
+                <h1>La Solution</h1>
+                <div class="description">
+                    <label for="description">description</label>
+                        {{ solution_ticket_form.solution_description }}
+                </div>
+            </header>
+
+            <footer>
+                <div class="set">
+                    <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
+                    <button  type="submit" id="next">Register</button>
+                </div>
+            </footer>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

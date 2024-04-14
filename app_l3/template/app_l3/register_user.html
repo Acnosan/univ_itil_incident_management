@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/formstyle.css' %}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}RegisterUser{% endblock %}
+
+{% block content %}
+<div class="content">
+    <form action="" class="" id="" method="post">
+        {% csrf_token %}
+        <h2>Register</h2>
+        <h3>Enter your credentials</h3>
+
+        {{ register_user_form.as_p }}
+
+        <br/><br/>
+        <button type="submit" name="register_button" id="" >Register</button>
+        <a href="{% url 'login_form' %}" ><label id="back" name="return" >Cancel</label></a>
+    </form>
+</div>
+{% endblock %}

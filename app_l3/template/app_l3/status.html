@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/formstyle.css' %}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block title %}TicketForm{% endblock %}
+
+
+{% block content %}
+<div class="content">
+    <form action="{% url 'add_status_form' %}" class="Form" id="RegisterForm" method="post">
+        {% csrf_token %}
+        <h2>Register Status</h2>
+        <h3>Enter your credentials</h3>
+        {{ add_status_form.as_p }}
+        <button type="submit" name="register_button" id="regDirect" >Register</button>
+        <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Return</label></a>
+    </form>
+</div>
+{% endblock %}

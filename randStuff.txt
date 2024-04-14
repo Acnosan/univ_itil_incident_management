@@ -1,0 +1,41 @@
+
+    <!--Footer Of the Page-->
+    <footer class="footerSec" id="divLink">
+      <!-- Upper Section OF footer -->
+      <div class="footerContent">
+        <div class="footerRow">
+          <a class="footerAboutUs" href="#ContainerAboutUs">
+            <!-- About Us box in Footer -->
+            <h3>About Us</h3>
+            <h5>Informations About Re/Tech</h5>
+          </a>
+          <a class="footerPrivacy" href="">
+            <!-- Privacy Policy box in Footer -->
+            <h3>Privacy Policy</h3>
+            <h5>Privacy Regulations And Rules</h5>
+          </a>
+        </div>
+      </div>
+      <!-- Lower Section OF footer -->
+      <div class="footerBottom">
+        <div class="bottomLinks">
+          <a href="home.html">Home</a>
+          <a href="">News</a>
+          <a href="">Business Affairs</a>
+          <a href="">Terms of Service</a>
+        </div>
+        <ul
+          id="contactUs"
+          style="
+            list-style-type: none;
+            margin-bottom: 0;
+            color: grey;
+          "
+        >
+          <li>Email : hakomezenner@gmail.com</li>
+          <li>Number : +213.3..5.5.</li>
+          <li>Location : Algiers .. ..</li>
+        </ul>
+        <h5>Copyright © Re/Tech. All Rights Reserved.</h5>
+      </div>
+    </footer>

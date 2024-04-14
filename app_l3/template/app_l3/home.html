@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block css %}
+<link href="{% static 'app_l3/dropdown_menu.css' %}" type="text/css" rel="stylesheet" >
+<link href="{% static 'app_l3/style.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" >
+{% endblock %}
+
+{% block title %}ReTech{% endblock %}
+
+{% block navbar %}
+    <!--Navigation Bar of the Page-->
+
+    <div class="menu-bar">
+      <h1 class="logo">Re<span>Tech.</span></h1>
+      <ul>
+        {% if user.is_authenticated %}
+          
+          <li class="dropdown">
+            <a class="dropbtn" >{{user.username}}</a>
+            <div class="dropdown-content">
+              <a href="{% url 'logout_user' %}" >Logout</a>
+              {% if is_staff %}
+              <a href="{% url 'home' type_user='staff' %}">Staff</a>
+              <a href="{% url 'home' type_user='technician' %}">Technician</a>
+              <a href="{% url 'home' type_user='self_service' %}">selfService</a>
+              <a href="{% url 'home' type_user='observer' %}">Observer</a>
+              {% endif %} 
+              {% if is_technician or is_self_serivce %}
+              <a href="{% url 'home' type_user='technician' %}">Technician</a>
+              <a href="{% url 'home' type_user='self_service' %}">selfService</a>
+              {% endif %} 
+              {% if is_observer %}
+              <a href="{% url 'home' type_user='observer' %}">Observer</a>
+              {% endif %} 
+            </div>
+          </li>
+
+          {% if is_staff %}
+          <li class="dropdown">
+            <a class="dropbtn" >Add Stuff</a>
+            <div class="dropdown-content">
+              <a href="{% url 'add_category_form' %}">Add Category</a>
+              <a href="{% url 'add_priority_form' %}">Add Priority</a>
+              <a href="{% url 'add_status_form' %}">Add Status</a>
+            </div>
+          </li>
+          <li><a href="{% url 'register_form' %}">Register User</a></li>
+          <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
+          
+          {% endif %} 
+          {% if is_technician or is_self_serivce %}
+          <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
+          {% endif %} 
+          {% if is_observer %}
+          {% endif %} 
+        {% endif %}
+      </ul>
+    </div>
+  
+{% endblock %}
+
+{% block content %}
+
+    {% if is_staff %}
+    <br /><br />
+    <div class="type_and_count">
+      <label class="type_tick" > All The Tickets Without filter </label>
+      <label class="count_tick" >( {{count_all_tickets}} )</label>
+    </div>
+
+      <div class="scroll-container">
+        <div class="scroll-content">
+          {% for event in all_tickets %}
+          <div class="card text-center">
+              <div class="content-item">
+                {% if event.status.status_name != 'finished' %}
+                <div class="card-header">
+                  <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Category : {{event.category}}</h5>
+                  <p class="card-text">Description : {{event.description}}.</p>
+                  <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this ticket?')" >Delete</button>
+                  </form>
+                  <form action="{% url 'add_solution_form' ticket_title=event.title %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Solution</button>
+                  </form>
+                  <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update/Assign</a>
+                </div>
+
+                <div class="card-footer text-muted">
+                  {{event.ticket_creation_date}}
+                </div>
+
+                {% endif %}
+              </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <br /><br />
+    <div class="type_and_count">
+      <label class="type_tick" > Created By Me </label>
+      <label class="count_tick" >( {{count_my_tickets}} )</label>
+    </div>
+
+    <div class="card text-center">
+      {% for event in tickets_created_by_me %}
+        {% if event.status.status_name != 'finished' %}
+        <div class="card-header">
+          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Category : {{event.category}}</h5>
+          <p class="card-text">Description : {{event.description}}.</p>
+          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Delete</button>
+          </form>
+          <form action="{% url 'add_solution_form' ticket_title=event.title %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Solution</button>
+          </form>
+          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update</a>
+        </div>
+        <div class="card-footer text-muted">
+          {{event.ticket_creation_date}}
+        </div>
+        <br>
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    <br /><br />
+    <div class="type_and_count">
+      <label class="type_tick" > Assigned To Me </label>
+      <label class="count_tick" >( {{count_to_me_tickets}} )</label>
+    </div>
+
+    <div class="card text-center">
+      {% for event in tickets_assigned_to_me %}
+        {% if event.status.status_name != 'finished' %}
+        <div class="card-header">
+          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Category : {{event.category}}</h5>
+          <p class="card-text">Description : {{event.description}}.</p>
+          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Delete</button>
+          </form>
+          <form action="{% url 'add_solution_form' ticket_title=event.title %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Solution</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted">
+          {{event.ticket_creation_date}}
+        </div>
+        <br>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <br /><br />
+    <div class="type_and_count">
+      <label class="type_tick" > Resolved Tickets </label>
+      <label class="count_tick" >( {{count_resolved_tickets}} )</label>
+    </div>
+
+    <div class="card text-center">
+      {% for event in tickets_solution_confirmed %}
+        {% if event.status.status_name == 'closed' %}
+        <div class="card-header">
+          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Category : {{event.category}}</h5>
+          <p class="card-text">Description : {{event.description}}.</p>
+          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Delete</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted">
+          {{ticket_solution_date}}
+        </div>
+        <br>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

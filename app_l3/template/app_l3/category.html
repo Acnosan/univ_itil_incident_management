@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/formstyle.css' %}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block title %}category{% endblock %}
+
+
+{% block content %}
+<div class="content">
+    <form action="{% url 'add_category_form' %}" class="Form" id="RegisterForm" method="post">
+        {% csrf_token %}
+        <h2>Register Category</h2>
+        <h3>Enter Details</h3>
+
+        {{ add_category_form.as_p }}
+        <button type="submit" name="register_button" id="regDirect" >Register</button>
+        <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Return</label></a>
+    </form>
+</div>
+{% endblock %}

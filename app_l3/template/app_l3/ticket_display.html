@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/formstyle.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/TicketCreation.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}TicketDisp{% endblock %}
+
+{% block content %}
+
+<div class="content">
+    <div class="card-body">
+        {% csrf_token %}
+        <h2>Ticket Details</h2>
+
+        <label >ticket title :</label><span>{{ ticket_display.title }}</span>  
+        <br/>
+        <label >ticket Description :</label>
+        <p class="card-text">{{ ticket_display.description }}</p>
+        <label class="card-title">ticket Category :</label>{{ ticket_display.category }}
+        <br/> 
+        <label class="card-title">ticket Date :</label><span>{{ ticket_display.ticket_creation_date }}</span> 
+
+        <h2>Ticket Solutions</h2>
+        {% if ticket_solution is not None %}
+            {% for solution in ticket_solution %}
+                <label >Solution Description :</label><p>{{solution.solution_description}}</p>
+                <label >Solution By :</label>{{solution.solution_by.tech_as_user.first_name}} {{solution.solution_by.tech_as_user.last_name}}
+                <label >Solution State :</label>{% if solution.confirmed_solution %}<p>Confirmed Solution</p>{% else %}<p>Not Confirmed Solution</p>{% endif %}
+
+                <form action="{% url 'confirm_ticket' ticket_title=ticket_display.title solution_id=solution.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="confirm" id="regDirect" >Confirm</button>
+                    <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
+                </form>
+            {% endfor %}
+        {%else%}
+            <div class="card-header">
+                <label >No Solutions For Now</label>
+            </div>
+        {%endif%}
+
+    </div>
+</div>
+{% endblock %}
