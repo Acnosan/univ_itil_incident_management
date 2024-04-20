@@ -21,7 +21,7 @@
         </div>
     </div>
 
-  <form action="{% url 'add_ticket_form' %}" method="post">
+  <form action="{% url 'add_ticket_form' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="right-container">
         <header>
@@ -56,17 +56,24 @@
 
           </div>
 
+          <div class="set">
+            <div class="probprior">
+              <label for="priority-easy">Priority :</label>
+              <div class="radio-container">
+                {{ add_ticket_form.priority }}
+              </div>
+            </div>
+            <div class="attachment">
+              <label for="attachment">attachment :</label>
+                {{add_ticket_form.attachment}} 
+            </div>
+          </div>
+
           <div class="description">
             <label for="description">description :</label>
               {{ add_ticket_form.description }}
           </div>
-
-          <div class="probprior">
-            <label for="priority-easy">Priority :</label>
-            <div class="radio-container">
-              {{ add_ticket_form.priority }}
-            </div>
-          </div>
+          
         </header>
         <footer>
           <div class="set">

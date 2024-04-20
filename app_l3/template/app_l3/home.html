@@ -46,14 +46,21 @@
               <a href="{% url 'add_status_form' %}">Add Status</a>
             </div>
           </li>
-          <li><a href="{% url 'register_form' %}">Register User</a></li>
+
+          <li class="dropdown">
+            <a class="dropbtn" >Users</a>
+            <div class="dropdown-content">
+              <a href="{% url 'register_user_form' %}">Register User</a>
+              <a href="{% url 'display_users' %}">Display Users</a>
+            </div>
+          </li>
+
           <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
-          
           {% endif %} 
-          {% if is_technician or is_self_serivce %}
+          {% if is_observer or is_self_serivce %}
           <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
           {% endif %} 
-          {% if is_observer %}
+          {% if is_technician %}
           {% endif %} 
         {% endif %}
       </ul>
@@ -173,7 +180,7 @@
 
     <br /><br />
     <div class="type_and_count">
-      <label class="type_tick" > Resolved Tickets </label>
+      <label class="type_tick" > Closed ( Resolved ) Tickets </label>
       <label class="count_tick" >( {{count_resolved_tickets}} )</label>
     </div>
 

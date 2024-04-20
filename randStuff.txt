@@ -39,3 +39,23 @@
         <h5>Copyright © Re/Tech. All Rights Reserved.</h5>
       </div>
     </footer>
+
+
+
+    <div>
+            <label for="id_is_staff">is_staff</label>
+            {{register_user_form.is_staff}}
+          </div>
+          <div>
+            <label for="id_is_technician">is_technician</label>
+            {{register_user_form.is_technician}}
+          </div>
+          <div>
+            <label for="id_is_self_service">is_self_service</label>
+            {{register_user_form.is_self_service}}
+          </div>
+          <div>
+            <label for="id_is_observer">is_observer</label>
+            {{register_user_form.is_observer}}
+          <label for="id_is_staff">is_staff</label>
+          </div>

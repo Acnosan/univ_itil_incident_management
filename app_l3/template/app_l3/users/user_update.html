@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css%}
+<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/login_register_style.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Users_Display{% endblock %}
+
+{% block content %}
+
+<div class="content">
+    <div class="card-body">
+        <form action="" class="" id="" method="post">
+            {% csrf_token %}
+            <h2>Update User</h2>
+
+            {{ updated_user_form.as_p }}
+            <br/><br/>
+            <button type="submit" name="register_button" id="" >Update</button>
+            <a href="{% url 'display_users' %}" ><label id="back" name="return" >Cancel</label></a>
+        </form>
+    </div>
+</div>
+{% endblock %}

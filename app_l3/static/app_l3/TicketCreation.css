@@ -193,7 +193,7 @@ a {
     background: #171A2B;
 }
 
-.prob-name label, .systemtype label, .technic label,  .probprior label, .status label, .description label {
+.prob-name label, .systemtype label, .technic label,  .probprior label, .status label, .description label .attachment label {
     display: block;
     margin-bottom: 5px;
 }

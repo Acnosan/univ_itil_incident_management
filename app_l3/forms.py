@@ -28,12 +28,12 @@ class RegisterUserForm(forms.ModelForm):
         }
         
         widgets = {
-            'username': forms.TextInput(attrs={'class':'Form','placeholder':"User Name"}),
-            'first_name': forms.TextInput(attrs={'class':'Form','placeholder':"First Name"}),
-            'last_name': forms.TextInput(attrs={'class':'Form','placeholder':"Last Name"}),
-            'number':  forms.NumberInput(attrs={'class':'Form','placeholder':"Number"}),
-            'email': forms.EmailInput(attrs={'class':'Form','placeholder':"Email"}),
-            'password': forms.PasswordInput(attrs={'class':'Form','placeholder':"Password"}),
+            'username': forms.TextInput(attrs={}),
+            'first_name': forms.TextInput(attrs={}),
+            'last_name': forms.TextInput(attrs={}),
+            'number':  forms.NumberInput(attrs={}),
+            'email': forms.EmailInput(attrs={}),
+            'password': forms.PasswordInput(attrs={}),
             'is_staff': forms.CheckboxInput(),
             'is_observer': forms.CheckboxInput(),
             'is_self_service': forms.CheckboxInput(),
@@ -82,7 +82,7 @@ class AddTicketsForm(forms.ModelForm):
     
     class Meta:
         model = TicketsModel
-        fields = ('title','category','priority','status','description','assigned_to')
+        fields = ('title','category','priority','status','description','attachment','assigned_to')
         labels = {
             'title': '',
             'category': '',
@@ -90,6 +90,7 @@ class AddTicketsForm(forms.ModelForm):
             'status': '',
             'description': '',
             'assigned_to': '',
+            'attachment': '',
         }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder':"Nom de Ticket",'id':"prob-name"}),      

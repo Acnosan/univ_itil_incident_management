@@ -138,6 +138,7 @@ class TicketsModel(models.Model):
     assigned_by = models.ForeignKey(UserModel,on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(TechnicianModel,on_delete=models.CASCADE,blank=True,null=True)
     description = models.TextField(blank=False,null=False)
+    attachment = models.FileField(blank=True,null=True,upload_to='ticket_attachments/')
     ticket_creation_date = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     
     class Meta:

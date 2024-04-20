@@ -5,7 +5,9 @@ urlpatterns = [
     path("home/<str:type_user>/",views.home,name="home"),
     path("",views.login_user,name="login_form"),
     path("logout/",views.logout_user,name="logout_user"),
-    path("register/",views.register_user,name="register_form"), 
+    path("register/",views.register_user,name="register_user_form"), 
+    path("users/",views.display_users,name="display_users"), 
+    path("user/update",views.update_user,name="update_user_form"), 
     
     path("ticket/create/",views.add_ticket,name="add_ticket_form"),
     path("ticket/<str:ticket_title>/",views.console_ticket,name="console_ticket"),

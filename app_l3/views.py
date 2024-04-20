@@ -18,28 +18,45 @@ def home(response,type_user):
     is_staff=is_observer=is_technician=is_self_service = None
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
-    if type_user == 'staff' : is_staff = True 
+    
+    if type_user == 'staff' : 
+        is_staff = is_technician = is_self_service = is_observer = True
+        user = UserModel.objects.get(username=username)
+        user.is_observer = user.is_self_service = user.is_technician =True
+        user.save()
     elif type_user == 'technician' : is_technician = True 
     elif type_user == 'self_service': is_self_service = True 
     else: is_observer = True
-
+    
     response.session['type_user'] = type_user
     try:
         all_tickets = TicketsModel.objects.all()
-        tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user)
-        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=TechnicianModel.objects.get(username=username))
-        try:
-            status=StatusModel.objects.get(status_name='closed')
-            tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
-        except StatusModel.DoesNotExist:
-            pass
-        
-        try:
-            ticket_solution_date = TicketSolutionModel.objects.get(confirmed_solution=True).ticket_solution_date
-        except TicketSolutionModel.DoesNotExist:
-            pass
-        
     except TicketsModel.DoesNotExist:
+        pass
+    
+    try:
+        tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user)
+    except TicketSolutionModel.DoesNotExist:
+        pass
+    
+    try:
+        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=TechnicianModel.objects.get(username=username))
+    except TicketSolutionModel.DoesNotExist:
+        pass
+        
+    try:
+        status=StatusModel.objects.get(status_name='closed')
+    except StatusModel.DoesNotExist:
+        pass
+    
+    try:
+        tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
+    except TicketSolutionModel.DoesNotExist:
+        pass
+        
+    try:
+        ticket_solution_date = TicketSolutionModel.objects.get(confirmed_solution=True).ticket_solution_date
+    except TicketSolutionModel.DoesNotExist:
         pass
         
     try:
@@ -113,27 +130,70 @@ def register_user(response):
                 SelfServiceModel.objects.create(username=username, self_service_as_user=model)
             if CreationForm.instance.is_technician:
                 TechnicianModel.objects.create(username=username, tech_as_user=model)
-
-            USER = authenticate(response, username=username, password=password)
-            if USER is not None:
-                messages.success(response, "You Can Login")
-                return redirect("login_form")
-            else:
-                messages.error(response, "There was Authentication error")
-                return redirect("login_form")
+            messages.success(response,("User Registered"))
+            redirect('register_user_form')
+            
         else:
+            messages.success(response,("Unvalid Register Form"))
             for txt in password_validators_help_texts():
-                print(txt)
+                messages.success(response,txt)
+            redirect('register_user_form')
+            
     else:
         CreationForm = RegisterUserForm()
     return render(response, "template/app_l3/register_user.html", {'register_user_form': CreationForm, 
                                                         'type_user': type_user,
                                                         })
 
+def update_user(response,target_username):
+    type_user = response.session.get('type_user')
+    if type_user == 'staff' : is_staff = True 
+    target_user = UserModel.objects.get(username=target_username)
+    updated_user_form = RegisterUserForm(response.POST or None, instance=target_user)
+    
+    if response.method == "POST":
+        if updated_user_form.is_valid():
+            
+            if updated_user_form.instance.is_staff:
+                if AdminModel.objects.get(username=target_username):
+                    pass
+                else:
+                    AdminModel.objects.create(username=target_username, admin_as_user=target_user)
+            if updated_user_form.instance.is_observer:
+                if ObserverModel.objects.get(username=target_user):
+                    pass
+                else:
+                    ObserverModel.objects.create(username=target_username, observer_as_user=target_user)
+                
+            if updated_user_form.instance.is_self_service:
+                if SelfServiceModel.objects.get(username=target_username):
+                    pass
+                else:
+                    SelfServiceModel.objects.create(username=target_username, self_service_as_user=target_user)
+            if updated_user_form.instance.is_technician:
+                if TechnicianModel.objects.get(username=target_username) :
+                    pass
+                else:
+                    TechnicianModel.objects.create(username=target_username, tech_as_user=target_user)
+            
+            updated_user_form.save()
+            
+            return redirect('user_display', type_user=type_user)
+        
+        print(updated_user_form.errors)
+    context = { 'updated_user_form':updated_user_form}
+    return render(response, "template/app_l3/users/user_update.html",context)
+
+def display_users(response):
+    type_user = response.session.get('type_user')
+    users = UserModel.objects.all()
+    context = {'type_user': type_user,'users_display': users}
+    return render(response, "template/app_l3/users/users_display.html", context)
+
 def add_ticket(response):
     type_user = response.session.get('type_user')
     is_staff = True if type_user == 'staff' else False
-    add_ticket_form = AddTicketsForm(response.POST,assigned_by=response.user)
+    add_ticket_form = AddTicketsForm(response.POST,response.FILES,assigned_by=response.user)
     
     if response.method == "POST":
         if add_ticket_form.is_valid():
@@ -149,19 +209,19 @@ def add_ticket(response):
         add_ticket_form = AddTicketsForm(assigned_by=response.user)
         
     context=  {'add_ticket_form': add_ticket_form,'type_user':type_user,'is_staff':is_staff}
-    return render(response, "template/app_l3/ticket_creation.html", context)
+    return render(response, "template/app_l3/tickets/ticket_creation.html", context)
 
 def console_ticket(response,ticket_title):
     type_user = response.session.get('type_user')
     ticket = get_object_or_404(TicketsModel, title=ticket_title)
     ticket_solution = TicketSolutionModel.objects.filter(targeted_ticket=ticket)
     context = {'type_user': type_user,'ticket_display': ticket,'ticket_solution':ticket_solution}
-    return render(response, "template/app_l3/ticket_display.html", context)
+    return render(response, "template/app_l3/tickets/ticket_display.html", context)
 
 def update_ticket(response,ticket_title):
     type_user = response.session.get('type_user')
     ticket = TicketsModel.objects.get(title=ticket_title)
-    update_ticket_form = AddTicketsForm(response.POST or None, instance=ticket)
+    update_ticket_form = AddTicketsForm(response.POST or None,response.FILES, instance=ticket)
     
     if update_ticket_form.is_valid():
         if update_ticket_form.instance.assigned_to is not None:
@@ -171,7 +231,7 @@ def update_ticket(response,ticket_title):
 
     print(update_ticket_form.errors)
     context = {'type_user': type_user, 'ticket_title': ticket.title, 'update_ticket_form': update_ticket_form}
-    return render(response, "template/app_l3/ticket_update.html", context)
+    return render(response, "template/app_l3/tickets/ticket_update.html", context)
 
 def delete_ticket(response,ticket_title):
     if response.method == "POST":
@@ -221,9 +281,10 @@ def add_solution(response,ticket_title):
         solution_ticket_form =  AddTicketSolutionForm()
         
     context = {'type_user':type_user,'ticket_title':ticket.title,'targeted_ticket_form':targeted_ticket_form,'solution_ticket_form':solution_ticket_form}
-    return render(response,"template/app_l3/ticket_solution.html",context)
+    return render(response,"template/app_l3/tickets/ticket_solution.html",context)
 
 def add_category(response):
+    type_user = response.session.get('type_user')
     if response.method == "POST":
         
         AddCategory = AddCategoryForm(response.POST)
@@ -236,10 +297,11 @@ def add_category(response):
     else:
         AddCategory = AddCategoryForm()
         
-    context={'add_category_form':AddCategory}
-    return render(response,'template/app_l3/category.html',context)
+    context={'add_category_form':AddCategory,'type_user':type_user}
+    return render(response,'template/app_l3/tickets_details/category.html',context)
 
 def add_priority(response):
+    type_user = response.session.get('type_user')
     if response.method == "POST":
         
         AddPriority = AddPriorityForm(response.POST)
@@ -252,10 +314,11 @@ def add_priority(response):
     else:
         AddPriority = AddPriorityForm()
         
-    context= {'add_priority_form':AddPriority}
-    return render(response,'template/app_l3/priority.html',context )
+    context= {'add_priority_form':AddPriority,'type_user':type_user}
+    return render(response,'template/app_l3/tickets_details/priority.html',context )
 
 def add_status(response):
+    type_user = response.session.get('type_user')
     if response.method == "POST":
         
         AddStatus = AddStatusForm(response.POST)
@@ -268,5 +331,5 @@ def add_status(response):
     else:
         AddStatus = AddStatusForm()
     
-    context={'add_status_form':AddStatus}
-    return render(response,'template/app_l3/status.html', context)
+    context={'add_status_form':AddStatus,'type_user':type_user}
+    return render(response,'template/app_l3/tickets_details/status.html', context)

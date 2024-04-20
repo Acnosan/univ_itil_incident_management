@@ -3,23 +3,79 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/formstyle.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/login_register_style.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %}RegisterUser{% endblock %}
+{% block title %}Register Form{% endblock %}
 
 {% block content %}
-<div class="content">
-    <form action="" class="" id="" method="post">
-        {% csrf_token %}
-        <h2>Register</h2>
-        <h3>Enter your credentials</h3>
+<body> <!-- partial:index.partial.html --> 
 
-        {{ register_user_form.as_p }}
+  <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+  <div class="signin"> 
+    <div class="content"> 
 
-        <br/><br/>
-        <button type="submit" name="register_button" id="" >Register</button>
-        <a href="{% url 'login_form' %}" ><label id="back" name="return" >Cancel</label></a>
-    </form>
-</div>
+      <h2>Register User</h2> 
+      <div class="form" > 
+        <form class="form" action="" method="post" >
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages%}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">{{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+          <div class="inputBox">
+            {{register_user_form.first_name}}<i>First Name</i>
+          </div>
+          <div class="inputBox">
+            {{register_user_form.last_name}}<i>Last Name</i>
+          </div>
+
+          <div class="inputBox"> 
+            {{register_user_form.username}}<i>Username</i> 
+          </div>
+
+          <div class="inputBox"> 
+            {{register_user_form.number}}<i>Number</i> 
+          </div>
+
+          <div class="inputBox"> 
+            {{register_user_form.email}}<i>Email</i> 
+          </div>	 
+
+          <div class="inputBox"> 
+            {{register_user_form.password}}<i>Password</i> 
+          </div> 
+
+          <div class="inputBox">
+              <div class="probprior">
+                <div class="radio-container">
+                    {{register_user_form.is_staff}}
+                    <label for="id_is_staff">is_staff</label>
+                    {{register_user_form.is_technician}}
+                    <label for="id_is_technician">is_technician</label>
+                    {{register_user_form.is_self_service}}
+                    <label for="id_is_self_service">is_self_service</label>
+                    {{register_user_form.is_observer}}
+                    <label for="id_is_staff">is_staff</label>
+                </div>
+              </div>
+          </div>
+
+          <div class="inputBox"> 
+            <input type="submit" value="Register"> 
+            <a href="{% url 'register_user_form' %}" ><label id="back" name="return" >Cancel</label></a>
+          </div> 
+        </form>
+    </div> 
+
+    </div> 
+  </div> 
+  
+  </section> <!-- partial --> 
+</body>
 {% endblock %}

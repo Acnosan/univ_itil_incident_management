@@ -3,31 +3,56 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/login_register_style.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/alert.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %}LoginForm{% endblock %}
+{% block title %}Login Form{% endblock %}
 
 {% block content %}
-<div class="content">
-    <form action="{% url 'login_form' %}" class="" id="" method="post">
-        {% csrf_token %}
-        <h2>Login</h2>
-        <h3>Enter your credentials</h3>
-        {% if messages %}
-            {% for message in messages%}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">{{message}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
-        {% endif %}
-        <input type="text" name="username" placeholder="Username" value="" required/>
-        <input type="password" name="password" placeholder="Password" value="" required/>
-        <br/><br/>
-        <a href="{% url 'register_form' %}">Register User</a>
-        <br/><br/>
-        <button type="submit" id="" name="login_button">Login</button>
-    </form>
-</div>
+
+<body> <!-- partial:index.partial.html --> 
+    <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> 
+    <div class="signin"> 
+        <div class="content"> 
+            <form action="{% url 'login_form' %}" class="Form" id="LoginForm" method="post">
+                {% csrf_token %}
+                <h2>Login</h2> 
+                <div class="form"> 
+                    {% if messages %}
+                        {% for message in messages%}
+                        <div class="alert alert-warning" id="myAlert">
+                            <span>{{ message }}</span>
+                            <button class="close-btn" onclick="closeAlert()">×</button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="inputBox"> 
+                        <input type="text" name="username" required> <i>Username</i> 
+                    </div> 
+
+                    <div class="inputBox"> 
+                        <input type="password" name="password" required> <i>Password</i> 
+                    </div> 
+
+                    <div class="links"> 
+                        <a href="#">Forgot Password</a> 
+                        <br/><br/>
+                    </div> 
+                    
+                    <div class="inputBox"> 
+                        <input type="submit" value="Login"> 
+                    </div> 
+                </div>
+            </form>    
+        </div> 
+    </div> 
+
+    </section> <!-- partial --> 
+</body>
 {% endblock %}
+
+{%script%}
+<script src="{% static 'app_l3/script/alert.js' %}"></script>
+{%endblock%}
 
