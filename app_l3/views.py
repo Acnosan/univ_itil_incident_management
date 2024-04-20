@@ -20,7 +20,7 @@ def home(response,type_user):
     username = response.user.username
     
     if type_user == 'staff' : 
-        is_staff = is_technician = is_self_service = is_observer = True
+        is_staff = True
         user = UserModel.objects.get(username=username)
         user.is_observer = user.is_self_service = user.is_technician =True
         user.save()

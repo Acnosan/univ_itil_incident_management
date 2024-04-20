@@ -60,7 +60,7 @@
           {% if is_observer or is_self_serivce %}
           <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
           {% endif %} 
-          {% if is_technician %}
+          {% if is_technician and %}
           {% endif %} 
         {% endif %}
       </ul>

@@ -3,8 +3,7 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/login_register_style.css' %}" type="text/css" rel="stylesheet" />
-<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/register_style.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block title %}Register Form{% endblock %}
@@ -20,14 +19,6 @@
       <div class="form" > 
         <form class="form" action="" method="post" >
             {% csrf_token %}
-            {% if messages %}
-                {% for message in messages%}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">{{message}}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-
           <div class="inputBox">
             {{register_user_form.first_name}}<i>First Name</i>
           </div>
