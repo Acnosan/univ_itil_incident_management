@@ -23,19 +23,38 @@
         <label class="card-title">ticket Category :</label>{{ ticket_display.category }}
         <br/> 
         <label class="card-title">ticket Date :</label><span>{{ ticket_display.ticket_creation_date }}</span> 
-
+        <br/>
+        <label class="card-title">ticket assigned by :</label><span>{{ ticket_display.assigned_by }}</span> 
+        <br/>
+        <label class="card-title">ticket assigned to :</label><span>{{ ticket_display.assigned_to }}</span> 
+        <br/>
+        <label class="card-title">ticket attachment :</label>
+        {% if ticket_display.attachment %}
+            <a href="{% url 'download_attachment' ticket_title=ticket_display.title %}" id="download-link" target="_blank">Download Attachment</a>
+        {% else %}
+            No attachment available
+        {% endif %}
+        <br/>
+        <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
         <h2>Ticket Solutions</h2>
         {% if ticket_solution is not None %}
             {% for solution in ticket_solution %}
-                <label >Solution Description :</label><p>{{solution.solution_description}}</p>
-                <label >Solution By :</label>{{solution.solution_by.tech_as_user.first_name}} {{solution.solution_by.tech_as_user.last_name}}
-                <label >Solution State :</label>{% if solution.confirmed_solution %}<p>Confirmed Solution</p>{% else %}<p>Not Confirmed Solution</p>{% endif %}
-
+                <span >Solution Description :</span><p>{{solution.solution_description}}</p>
+                <span >Solution By :</span>{{solution.solution_by.tech_as_user.first_name}} {{solution.solution_by.tech_as_user.last_name}}
+                <br/><br/>
+                <span >Solution State :</span>{% if solution.confirmed_solution %}<p>Confirmed Solution</p>{% else %}<p>Not Confirmed Solution</p>{% endif %}
+                
+                {%if not solution.confirmed_solution %}
                 <form action="{% url 'confirm_ticket' ticket_title=ticket_display.title solution_id=solution.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" name="confirm" id="regDirect" >Confirm</button>
-                    <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
                 </form>
+                {%else%}
+                <form action="{% url 'download_solution' ticket_title=ticket_display.title  solution_id=solution.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="confirm" id="regDirect" >Download Solution</button>
+                </form>
+                {% endif %}
             {% endfor %}
         {%else%}
             <div class="card-header">
@@ -45,4 +64,23 @@
 
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the download link
+        var downloadLink = document.getElementById('download-link');
+    
+        // Add a click event listener to the download link
+        downloadLink.addEventListener('click', function(event) {
+            // Prevent the default link behavior (preventing navigation)
+            event.preventDefault();
+    
+            // Open the download link in a new tab
+            window.open(downloadLink.href, '_blank');
+        });
+    });
+</script>
+
 {% endblock %}

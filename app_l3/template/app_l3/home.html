@@ -60,7 +60,7 @@
           {% if is_observer or is_self_serivce %}
           <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
           {% endif %} 
-          {% if is_technician and %}
+          {% if is_technician %}
           {% endif %} 
         {% endif %}
       </ul>
@@ -82,7 +82,7 @@
           {% for event in all_tickets %}
           <div class="card text-center">
               <div class="content-item">
-                {% if event.status.status_name != 'finished' %}
+                {% if event.status.status_name != 'closed' %}
                 <div class="card-header">
                   <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
                 </div>
@@ -121,7 +121,7 @@
 
     <div class="card text-center">
       {% for event in tickets_created_by_me %}
-        {% if event.status.status_name != 'finished' %}
+        {% if event.status.status_name != 'closed' %}
         <div class="card-header">
           <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
         </div>
@@ -136,7 +136,7 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Solution</button>
           </form>
-          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update</a>
+          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update/Assign</a>
         </div>
         <div class="card-footer text-muted">
           {{event.ticket_creation_date}}
@@ -154,7 +154,7 @@
 
     <div class="card text-center">
       {% for event in tickets_assigned_to_me %}
-        {% if event.status.status_name != 'finished' %}
+        {% if event.status.status_name != 'closed' %}
         <div class="card-header">
           <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
         </div>
@@ -169,6 +169,7 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Solution</button>
           </form>
+          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update/Assign</a>
         </div>
         <div class="card-footer text-muted">
           {{event.ticket_creation_date}}
@@ -199,7 +200,11 @@
           </form>
         </div>
         <div class="card-footer text-muted">
-          {{ticket_solution_date}}
+          {% for solution in tickets_solution %}
+            {%if solution.targeted_ticket == event%}
+              {{solution.ticket_solution_date}}
+            {% endif %}
+          {% endfor %}
         </div>
         <br>
         {% endif %}

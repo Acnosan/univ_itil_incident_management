@@ -14,6 +14,8 @@ urlpatterns = [
     path("ticket/update/<str:ticket_title>/",views.update_ticket,name="update_ticket_form"),
     path("ticket/delete/<str:ticket_title>/",views.delete_ticket,name="delete_ticket"),
     path("ticket/confirm/<str:ticket_title>/<int:solution_id>/",views.confirm_ticket,name="confirm_ticket"),
+    path("ticket/solution/download-<str:ticket_title>-<int:solution_id>/",views.download_solution,name="download_solution"),
+    path('download-attachment/<str:ticket_title>/', views.download_attachment, name='download_attachment'),
     
     path("category/create/",views.add_category,name="add_category_form"),
     path("priority/create/",views.add_priority,name="add_priority_form"),

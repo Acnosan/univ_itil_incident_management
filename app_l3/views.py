@@ -6,10 +6,14 @@ from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from django.contrib import messages
 from .forms import RegisterUserForm,AddTicketsForm,AddTicketSolutionForm
 from .forms import AddCategoryForm,AddPriorityForm,AddStatusForm
-from .models import UserModel,TicketsModel,TicketSolutionModel
+from .models import UserModel,TicketsModel,TicketSolutionModel,TicketSolutionAttachmentModel
 from .models import TechnicianModel,AdminModel,ObserverModel,SelfServiceModel
 from .models import CategoryModel,PriorityModel,StatusModel
 from datetime import date,datetime
+
+from django.conf import settings
+import os
+
 # Create your views here.
 
 def home(response,type_user):
@@ -51,11 +55,11 @@ def home(response,type_user):
     
     try:
         tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
-    except TicketSolutionModel.DoesNotExist:
+    except TicketsModel.DoesNotExist:
         pass
         
     try:
-        ticket_solution_date = TicketSolutionModel.objects.get(confirmed_solution=True).ticket_solution_date
+        tickets_solution = TicketSolutionModel.objects.filter(confirmed_solution=True)
     except TicketSolutionModel.DoesNotExist:
         pass
         
@@ -70,7 +74,7 @@ def home(response,type_user):
             
     context = {'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
-    'tickets_solution_confirmed':tickets_solution_confirmed,'ticket_solution_date':ticket_solution_date,
+    'tickets_solution_confirmed':tickets_solution_confirmed,'tickets_solution':tickets_solution,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
     'count_all_tickets':count_all_tickets,'all_tickets':all_tickets}
     return render(response, "template/app_l3/home.html", context)
@@ -250,12 +254,13 @@ def confirm_ticket(response,ticket_title,solution_id):
     ticket_solution= TicketSolutionModel.objects.get(pk=solution_id)
     if response.method == "POST":
         try:
-                ticket.status = StatusModel.objects.get(status_name='closed')
-                ticket.save()
-                ticket_solution.confirmed_solution = True
-                ticket_solution.ticket_solution_date = datetime.now()
-                ticket_solution.save()
-                return redirect("home", type_user=response.session.get('type_user'))
+            ticket.status = StatusModel.objects.get(status_name='closed')
+            ticket.save()
+            ticket_solution.confirmed_solution = True
+            ticket_solution.ticket_solution_date = datetime.now()
+            ticket_solution.save()
+            #return redirect("home", type_user=response.session.get('type_user'))
+            return redirect('console_ticket',ticket_title=ticket_title)
         except ticket_solution.DoesNotExist:
             return HttpResponse("Object not found", status=404)
     else:
@@ -282,6 +287,44 @@ def add_solution(response,ticket_title):
         
     context = {'type_user':type_user,'ticket_title':ticket.title,'targeted_ticket_form':targeted_ticket_form,'solution_ticket_form':solution_ticket_form}
     return render(response,"template/app_l3/tickets/ticket_solution.html",context)
+
+def download_solution(response,ticket_title,solution_id):
+    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+    solution = get_object_or_404(TicketSolutionModel,confirmed_solution=True,targeted_ticket=ticket)
+    if response.method == 'POST':
+        readData = solution.solution_description
+        filename = str(solution_id)+'_'+ticket_title+'.txt'
+        
+        if not os.path.exists(settings.MEDIA_SOL_ROOT):
+            os.makedirs(settings.MEDIA_SOL_ROOT)
+            
+        file_path = os.path.join(settings.MEDIA_SOL_ROOT,filename)
+        with open(file_path, 'w') as file:
+            file.write(readData)
+            
+        TicketSolutionAttachmentModel.objects.create(targeted_solution=solution,attachment=filename)
+        
+        response = HttpResponse(readData, content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        return response
+    else:
+        # Handle GET requests or other methods
+        return HttpResponse("Method not allowed", status=405)   
+
+def download_attachment(response, ticket_title):
+    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+
+    response = HttpResponse(ticket.attachment.read(), content_type='application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename="{ticket.attachment.name}"'
+    
+    if not os.path.exists(settings.MEDIA_ATT_ROOT):
+        os.makedirs(settings.MEDIA_ATT_ROOT)
+    
+    file_path = os.path.join(settings.MEDIA_ATT_ROOT,ticket.attachment.name)
+    with open(file_path, 'wb') as file:
+        file.write(ticket.attachment.read())
+        
+    return response
 
 def add_category(response):
     type_user = response.session.get('type_user')

@@ -138,7 +138,7 @@ class TicketsModel(models.Model):
     assigned_by = models.ForeignKey(UserModel,on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(TechnicianModel,on_delete=models.CASCADE,blank=True,null=True)
     description = models.TextField(blank=False,null=False)
-    attachment = models.FileField(blank=True,null=True,upload_to='ticket_attachments/')
+    attachment = models.FileField(blank=True,null=True,upload_to='app_l3/ticket_attachments/')
     ticket_creation_date = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     
     class Meta:
@@ -157,4 +157,13 @@ class TicketSolutionModel(models.Model):
     
     class Meta:
         db_table = 'tickets_solutions_table'
+        
+class TicketSolutionAttachmentModel(models.Model):
+    
+    targeted_solution = models.ForeignKey(TicketSolutionModel,on_delete=models.PROTECT,blank=False,null=False)
+    attachment = models.FileField(blank=True,null=True,upload_to='downloaded_solutions/')
+    
+    class Meta:
+        db_table = 'tickets_solutions_attachment_table'
+        
 
