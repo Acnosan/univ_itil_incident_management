@@ -13,40 +13,43 @@
 
 <body> <!-- partial:index.partial.html --> 
     <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-    <div class="signin"> 
-        <div class="content"> 
-            <form action="{% url 'login_form' %}" class="Form" id="LoginForm" method="post">
-                {% csrf_token %}
-                <h2>Login</h2> 
-                {% if messages %}
-                        {% for message in messages%}
-                        <div class="alert alert-warning" id="myAlert">
-                            <span>{{ message }}</span>
-                            <button class="close-btn" onclick="closeAlert()">×</button>
-                        </div>
-                        {% endfor %}
-                {% endif %}
-                <div class="form"> 
-                    <div class="inputBox"> 
-                        <input type="text" name="username" required> <i>Username</i> 
-                    </div> 
+<div class="signin"> 
+    <div class="content"> 
 
-                    <div class="inputBox"> 
-                        <input type="password" name="password" required> <i>Password</i> 
-                    </div> 
-
-                    <div class="links"> 
-                        <a href="#">Forgot Password</a> 
-                        <br/><br/>
-                    </div> 
-                    
-                    <div class="inputBox"> 
-                        <input type="submit" value="Login"> 
-                    </div> 
+        <h2>Login</h2> 
+        {% if messages %}
+                {% for message in messages%}
+                <div class="alert alert-warning" id="myAlert">
+                    <span>{{ message }}</span>
+                    <button class="close-btn" onclick="closeAlert()">×</button>
                 </div>
-            </form>    
-        </div> 
+                {% endfor %}
+        {% endif %}
+        
+        <form action="{% url 'login_form' %}" class="Form" id="LoginForm" method="post">
+            {% csrf_token %}
+            
+            <div class="form"> 
+                <div class="inputBox"> 
+                    <input type="text" name="username" required> <i>Username</i> 
+                </div> 
+
+                <div class="inputBox"> 
+                    <input type="password" name="password" required> <i>Password</i> 
+                </div> 
+
+                <div class="links"> 
+                    <a href="#">Forgot Password</a> 
+                    <br/><br/>
+                </div> 
+                
+                <div class="inputBox"> 
+                    <input type="submit" value="Login"> 
+                </div> 
+            </div>
+        </form>    
     </div> 
+</div> 
 
     </section> <!-- partial --> 
 </body>

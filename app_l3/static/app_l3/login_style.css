@@ -64,7 +64,7 @@ section span:hover
 section .signin
 {
   position: absolute;
-  width: 400px;
+  width: 800px;
   background: #2D1026;  
   z-index: 1000;
   display: flex;
@@ -100,7 +100,7 @@ section .signin .content .form
 section .signin .content .form .inputBox
 {
   position: relative;
-  width: 100%;
+  width: 450px;
 }
 section .signin .content .form .inputBox input 
 {

@@ -1,0 +1,42 @@
+
+.probprior {
+display: flex;
+justify-content: center; /* Center the radio-container horizontally */
+align-items: center; /* Center the radio-container vertically */
+}
+
+.probprior label {
+display: flex;
+margin-bottom: 5px;
+align-items: center;
+justify-content: center;
+}
+
+.radio-container {
+display: flex;
+align-items: center; /* Align the elements vertically */
+background: #fff;
+border: 1px solid rgba(0,0,0,.1);
+border-radius: 2px;
+padding: 5px;
+}
+
+.radio-container label {
+margin-right: 5px;
+background: transparent;
+border: 1px solid transparent;
+border-radius: 2px;
+display: inline-block;
+text-align: center;
+transition: .2s all ease-in-out;
+width: 150px;
+}
+
+.radio-container input[type="radio"] {
+display: none;
+}
+
+.radio-container input[type="radio"]:checked + label {
+background: #F7B1AB;
+border: 1px solid rgba(0,0,0,.1);
+}

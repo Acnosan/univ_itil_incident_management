@@ -64,7 +64,7 @@ section span:hover
 section .signin
 {
   position: absolute;
-  width: 400px;
+  width: 800px;
   background: #2D1026;  
   z-index: 1000;
   display: flex;
@@ -125,8 +125,8 @@ section .signin .content .form .inputBox i
   transition: 0.5s;
   pointer-events: none;
 }
-.signin .content .form .inputBox input:focus ~ i,
-.signin .content .form .inputBox input:valid ~ i
+.signin .content .form .inputBox input:focus ~ i,.signin .content .form .inputBox a:focus ~ i,
+.signin .content .form .inputBox input:valid ~ i,.signin .content .form .inputBox a:valid ~ i
 {
   transform: translateY(-7.5px);
   font-size: 0.8em;
@@ -149,7 +149,7 @@ section .signin .content .form .inputBox i
   color: white;
   font-weight: 600;
 }
-.signin .content .form .inputBox input[type="submit"]
+.signin .content .form .inputBox input[type="submit"],.signin .content .form .inputBox a
 {
   padding: 10px;
   background: #BB76BE;
@@ -160,10 +160,12 @@ section .signin .content .form .inputBox i
   cursor: pointer;
   margin-top: 35px;
 }
-input[type="submit"]:active
+input[type="submit"]:active,a:active
 {
   opacity: 0.6;
 }
+
+
 @media (max-width: 900px)
 {
   section span 
@@ -179,38 +181,4 @@ input[type="submit"]:active
     width: calc(20vw - 2px);
     height: calc(20vw - 2px);
   }
-}
-
-
-.signin .content .form .inputBox input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  margin-right: 10px;
-  height: 20px;
-  width: 35px;
-  background-color: transparent;
-  border: 2px solid #BB76BE;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.signin .content .form .inputBox input[type="checkbox"]::after {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  content: "\f00c";
-  font-size: 20px;
-  color: #BB76BE;
-  display: none;
-}
-
-.signin .content .form .inputBox input[type="checkbox"]:checked {
-  background-color: #BB76BE;
-  border-color: #BB76BE;
-}
-
-.signin .content .form .inputBox input[type="checkbox"]:checked::after {
-  display: block;
 }

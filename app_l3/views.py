@@ -18,7 +18,7 @@ import os
 
 def home(response,type_user):
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
-    tickets_solution_confirmed = ticket_solution_date = None
+    tickets_solution_confirmed = tickets_solution = None
     is_staff=is_observer=is_technician=is_self_service = None
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
@@ -26,12 +26,18 @@ def home(response,type_user):
     if type_user == 'staff' : 
         is_staff = True
         user = UserModel.objects.get(username=username)
-        user.is_observer = user.is_self_service = user.is_technician =True
-        user.save()
+        if user.is_technician == False:
+            user.is_observer = user.is_self_service = user.is_technician =True
+            AdminModel.objects.create(username=username, admin_as_user=user, creation_date=date.today())
+            ObserverModel.objects.create(username=username, observer_as_user=user, creation_date=date.today())
+            SelfServiceModel.objects.create(username=username, self_service_as_user=user, creation_date=date.today())
+            TechnicianModel.objects.create(username=username, tech_as_user=user, creation_date=date.today())
+            user.save()
+            
     elif type_user == 'technician' : is_technician = True 
     elif type_user == 'self_service': is_self_service = True 
     else: is_observer = True
-    
+        
     response.session['type_user'] = type_user
     try:
         all_tickets = TicketsModel.objects.all()
@@ -44,18 +50,24 @@ def home(response,type_user):
         pass
     
     try:
-        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=TechnicianModel.objects.get(username=username))
+        try:
+            tech = TechnicianModel.objects.get(username=username)
+        except TechnicianModel.DoesNotExist:
+            tech=None
+            pass
+        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=tech)
     except TicketSolutionModel.DoesNotExist:
         pass
         
+
     try:
-        status=StatusModel.objects.get(status_name='closed')
-    except StatusModel.DoesNotExist:
-        pass
-    
-    try:
+        try:
+            status=StatusModel.objects.get(status_name='closed')
+        except StatusModel.DoesNotExist:
+            status=None
+            pass
         tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
-    except TicketsModel.DoesNotExist:
+    except TicketSolutionModel.DoesNotExist:
         pass
         
     try:
@@ -70,8 +82,7 @@ def home(response,type_user):
         count_all_tickets = all_tickets.count()
     except:
         pass
-            
-            
+
     context = {'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
     'tickets_solution_confirmed':tickets_solution_confirmed,'tickets_solution':tickets_solution,
@@ -208,7 +219,7 @@ def add_ticket(response):
             add_ticket_form.save()
             return redirect('home',type_user=response.session.get('type_user'))     
         print(add_ticket_form.errors)
-        return render(response, "template/app_l3/ticket_creation.html", {'add_ticket_form': add_ticket_form,'type_user':type_user})
+        return render(response, "template/app_l3/tickets/ticket_creation.html", {'add_ticket_form': add_ticket_form,'type_user':type_user})
     else:
         add_ticket_form = AddTicketsForm(assigned_by=response.user)
         

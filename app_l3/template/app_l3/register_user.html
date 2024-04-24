@@ -4,6 +4,7 @@
 
 {% block css%}
 <link href="{% static 'app_l3/register_style.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/user_perms.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block title %}Register Form{% endblock %}
@@ -12,61 +13,96 @@
 <body> <!-- partial:index.partial.html --> 
 
   <section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
-  <div class="signin"> 
-    <div class="content"> 
 
-      <h2>Register User</h2> 
-      <div class="form" > 
-        <form class="form" action="" method="post" >
-            {% csrf_token %}
-          <div class="inputBox">
-            {{register_user_form.first_name}}<i>First Name</i>
+
+<div class="signin"> 
+  <div class="content"> 
+    <h2>Register User</h2> 
+    
+    {% if messages %}
+      {% for message in messages%}
+      <div class="alert alert-warning" id="myAlert"
+      style="padding: 10px; margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;">
+          <span class="message" style="display: inline-block;width: 600px;">{{ message }}</span>
+          <button class="close-btn" onclick="closeAlert()" 
+          style="font-size: 50px;font-weight: bold; color: #000;
+          text-shadow: 0 1px 0 #fff; cursor: pointer;border: none;background: transparent;"></button>
+
+      </div>
+      {% endfor %}
+    {% endif %}
+    <div class="form" > 
+      <form class="form" action="" method="post" >
+          {% csrf_token %}
+        <div class="inputBox">
+          {{register_user_form.first_name}}<i>First Name</i>
+        </div>
+        <div class="inputBox">
+          {{register_user_form.last_name}}<i>Last Name</i>
+        </div>
+
+        <div class="inputBox"> 
+          {{register_user_form.username}}<i>Username</i> 
+        </div>
+
+        <div class="inputBox"> 
+          {{register_user_form.number}}<i>Number</i> 
+        </div>
+
+        <div class="inputBox"> 
+          {{register_user_form.email}}<i>Email</i> 
+        </div>	 
+
+        <div class="inputBox"> 
+          {{register_user_form.password}}<i>Password</i> 
+        </div> 
+
+        
+        <div class="probprior">
+          <div class="radio-container">
+              {{register_user_form.is_observer}}
+              <label for="id_is_observer">Observer</label>
+              {{register_user_form.is_technician}}
+              <label for="id_is_technician">Technician</label>
+              {{register_user_form.is_self_service}}
+              <label for="id_is_self_service">Self Service</label>
+              {{register_user_form.is_staff}}
+              <label for="id_is_staff">Staff</label>
           </div>
-          <div class="inputBox">
-            {{register_user_form.last_name}}<i>Last Name</i>
-          </div>
+        </div>
 
-          <div class="inputBox"> 
-            {{register_user_form.username}}<i>Username</i> 
-          </div>
 
-          <div class="inputBox"> 
-            {{register_user_form.number}}<i>Number</i> 
-          </div>
-
-          <div class="inputBox"> 
-            {{register_user_form.email}}<i>Email</i> 
-          </div>	 
-
-          <div class="inputBox"> 
-            {{register_user_form.password}}<i>Password</i> 
-          </div> 
-
-          <div class="inputBox">
-              <div class="probprior">
-                <div class="radio-container">
-                    {{register_user_form.is_staff}}
-                    <label for="id_is_staff">is_staff</label>
-                    {{register_user_form.is_technician}}
-                    <label for="id_is_technician">is_technician</label>
-                    {{register_user_form.is_self_service}}
-                    <label for="id_is_self_service">is_self_service</label>
-                    {{register_user_form.is_observer}}
-                    <label for="id_is_staff">is_staff</label>
-                </div>
+        <!--<div class="inputBox">
+            <div class="probprior">
+              <div class="radio-container">
+                  {{register_user_form.is_staff}}
+                  <label for="id_is_staff">is_staff</label>
+                  {{register_user_form.is_technician}}
+                  <label for="id_is_technician">is_technician</label>
+                  {{register_user_form.is_self_service}}
+                  <label for="id_is_self_service">is_self_service</label>
+                  {{register_user_form.is_observer}}
+                  <label for="id_is_observer">observer</label>
               </div>
-          </div>
+            </div>
+        </div>
+      -->
 
-          <div class="inputBox"> 
-            <input type="submit" value="Register"> 
-            <a href="{% url 'register_user_form' %}" ><label id="back" name="return" >Cancel</label></a>
-          </div> 
-        </form>
-    </div> 
-
-    </div> 
+        <div class="inputBox"> 
+          <input type="submit" value="Register"> 
+          <a href="{% url 'register_user_form' %}" ><label id="back" name="return" >Cancel</label></a>
+        </div> 
+      </form>
   </div> 
+
+  </div> 
+</div> 
   
   </section> <!-- partial --> 
 </body>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'app_l3/script/alert.js' %}" ></script>
+<script src="{% static 'app_l3/script/user_perm.js' %"}></script>
 {% endblock %}

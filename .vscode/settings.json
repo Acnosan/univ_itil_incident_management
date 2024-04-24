@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "app_l3\\migrations": true,
+        "app_l3\\__pycache__": true,
+        "app_l3\\__init__.py": true,
+        "app_l3\\admin.py": true,
+        "app_l3\\apps.py": true,
+        "app_l3\\backends.py": true,
+        "app_l3\\base.html": true,
+        "app_l3\\tests.py": true
+    }
+}
