@@ -4,9 +4,9 @@
 
 {% block css%}
 <link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
-<link href="{% static 'app_l3/login_register_style.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/login_style.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
-{% block title %}Users_Display{% endblock %}
+{% block title %}Display{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,6 @@
     <div class="card-body">
         {% for user in users_display %}
             <ul>
-
                 <li><a href="{% url 'update_user_form' target_username=user.username %}">{{ user.username }}</a> - {{ user.email }}</li>
                 <li>{{ user.first_name }} - {{ user.last_name }}</li>
                 <li>{{ user.number }}</li>
@@ -22,10 +21,7 @@
                 <li><span> TECHNICIAN : </span>{{ user.is_technician }} - <span> SELF SERVICE : </span>{{ user.is_self_service }}</li>
             </ul>
             <br/>
-        {% empty %}
-                <li>No users found.</li>
         {% endfor %}   
-    
         <br/><br/>
         <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
     </div>

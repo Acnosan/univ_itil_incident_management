@@ -1,42 +1,77 @@
-
-.probprior {
-display: flex;
-justify-content: center; /* Center the radio-container horizontally */
-align-items: center; /* Center the radio-container vertically */
+.big_wrapper {
+    display: flex;
+    justify-content: center; /* Center the radio-container horizontally */
+    align-items: center; /* Center the radio-container vertically */
 }
 
-.probprior label {
-display: flex;
-margin-bottom: 5px;
-align-items: center;
-justify-content: center;
+.wrapper {
+    display: flex;
+    align-items: center; /* Align the elements vertically */
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 2px;
+    padding: 5px;
 }
 
-.radio-container {
-display: flex;
-align-items: center; /* Align the elements vertically */
-background: #fff;
-border: 1px solid rgba(0,0,0,.1);
-border-radius: 2px;
-padding: 5px;
+.wrapper label {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    margin-right: 5px;
+    background: transparent;
+    display: inline-block;
+    text-align: center;
 }
 
-.radio-container label {
-margin-right: 5px;
-background: transparent;
-border: 1px solid transparent;
-border-radius: 2px;
-display: inline-block;
-text-align: center;
-transition: .2s all ease-in-out;
-width: 150px;
+.wrapper label::before {
+    content: '';
+    height: 30px;
+    width: 50px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-.radio-container input[type="radio"] {
-display: none;
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 40px;
+    width: 40px;
+    background-color: #d5d5d5;
+    border-radius: 0.5em;
+    cursor: pointer;
+    display: flex;
+    outline: none;
+    align-items: center;
+    justify-content: center;
 }
 
-.radio-container input[type="radio"]:checked + label {
-background: #F7B1AB;
-border: 1px solid rgba(0,0,0,.1);
+label {
+    color: #4c4c4c;
+    cursor: pointer;
 }
+
+input[type="checkbox"]:after {
+    font-family: "Font Awesome 6 Free";
+    content: "\f00c";
+    font-weight: 900;
+    font-size: 3.12em;
+    color: #ffffff;
+    display: none;
+}
+
+input[type="checkbox"]:hover {
+    background-color: #a5a5a5;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #0083e8;
+}
+
+input[type="checkbox"]:checked:after {
+    display: block;
+}
+
+
+

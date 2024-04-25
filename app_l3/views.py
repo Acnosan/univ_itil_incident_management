@@ -10,6 +10,7 @@ from .models import UserModel,TicketsModel,TicketSolutionModel,TicketSolutionAtt
 from .models import TechnicianModel,AdminModel,ObserverModel,SelfServiceModel
 from .models import CategoryModel,PriorityModel,StatusModel
 from datetime import date,datetime
+import csv
 
 from django.conf import settings
 import os
@@ -26,14 +27,16 @@ def home(response,type_user):
     if type_user == 'staff' : 
         is_staff = True
         user = UserModel.objects.get(username=username)
-        if user.is_technician == False:
-            user.is_observer = user.is_self_service = user.is_technician =True
-            AdminModel.objects.create(username=username, admin_as_user=user, creation_date=date.today())
-            ObserverModel.objects.create(username=username, observer_as_user=user, creation_date=date.today())
-            SelfServiceModel.objects.create(username=username, self_service_as_user=user, creation_date=date.today())
-            TechnicianModel.objects.create(username=username, tech_as_user=user, creation_date=date.today())
-            user.save()
-            
+        if user.is_staff:
+            try:
+                AdminModel.objects.create(username=username, admin_as_user=user, creation_date=date.today())
+                ObserverModel.objects.create(username=username, observer_as_user=user, creation_date=date.today())
+                SelfServiceModel.objects.create(username=username, self_service_as_user=user, creation_date=date.today())
+                TechnicianModel.objects.create(username=username, tech_as_user=user, creation_date=date.today())
+                user.save()
+            except:
+                pass
+
     elif type_user == 'technician' : is_technician = True 
     elif type_user == 'self_service': is_self_service = True 
     else: is_observer = True
@@ -126,7 +129,6 @@ def logout_user(response):
 
 def register_user(response):
     type_user = response.session.get('type_user')
-    if type_user == 'staff' : is_staff = True 
     
     if response.method == "POST":
         CreationForm = RegisterUserForm(response.POST)
@@ -156,13 +158,13 @@ def register_user(response):
             
     else:
         CreationForm = RegisterUserForm()
-    return render(response, "template/app_l3/register_user.html", {'register_user_form': CreationForm, 
-                                                        'type_user': type_user,
-                                                        })
+        
+    context={'register_user_form': CreationForm, 'type_user': type_user}
+    return render(response, "template/app_l3/register_user.html",context)
 
 def update_user(response,target_username):
     type_user = response.session.get('type_user')
-    if type_user == 'staff' : is_staff = True 
+
     target_user = UserModel.objects.get(username=target_username)
     updated_user_form = RegisterUserForm(response.POST or None, instance=target_user)
     
@@ -196,7 +198,7 @@ def update_user(response,target_username):
             return redirect('user_display', type_user=type_user)
         
         print(updated_user_form.errors)
-    context = { 'updated_user_form':updated_user_form}
+    context = {'updated_user_form':updated_user_form,'type_user':type_user}
     return render(response, "template/app_l3/users/user_update.html",context)
 
 def display_users(response):
@@ -387,3 +389,21 @@ def add_status(response):
     
     context={'add_status_form':AddStatus,'type_user':type_user}
     return render(response,'template/app_l3/tickets_details/status.html', context)
+
+def export_to_csv_by_me(request,filename):
+    rows = ["id","title","description","creation date","assigned to","category","priority","status"]
+    try:
+        queryset = TicketsModel.objects.filter(assigned_by=request.user)
+    except TicketSolutionModel.DoesNotExist:
+        pass
+    
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    writer = csv.writer(response)
+    writer.writerow(rows)  # Write header row
+    
+    for obj in queryset:
+        writer.writerow([obj.pk,obj.title,obj.description,obj.ticket_creation_date,obj.assigned_to,obj.category,obj.priority,obj.status])
+
+    return response

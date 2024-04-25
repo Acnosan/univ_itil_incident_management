@@ -4,7 +4,6 @@
 {% block css %}
 <link href="{% static 'app_l3/home_nav_bar.css' %}" type="text/css" rel="stylesheet" >
 <link href="{% static 'app_l3/tickets_tables.css' %}" type="text/css" rel="stylesheet" >
-<!--<link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" >-->
 {% endblock %}
 
 {% block title %}ReTech{% endblock %}}
@@ -13,7 +12,7 @@
 
   <nav>
   <div class="wrapper">
-    <div class="logo"><a href="#">NEW</a></div>
+    <div class="logo"><a href="#">Incident<span style="color: black;">Management</span></a></div>
     <input type="radio" name="slider" id="menu-btn">
     <input type="radio" name="slider" id="close-btn">
     <ul class="nav-links">
@@ -22,6 +21,7 @@
         <a href="#" class="desktop-item">{{user.username}}</a>
         <ul class="drop-menu">
           <li><a href="{% url 'logout_user' %}">Logout</a></li>  
+
           {% if user.is_staff %}
           <li><a href="{% url 'home' type_user='staff' %}">Staff</a></li>
           <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
@@ -29,37 +29,15 @@
           <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
           {% endif %} 
 
-          {% if is_technician and is_self_serivce and is_observer %}
-          <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
-          <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
-          <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
-          {% endif %} 
-
-          {% if is_technician and is_self_serivce %}
-          <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
-          <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
-          {% endif %} 
-
-          {% if is_technician and is_observer %}
-          <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
-          <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
-          {% endif %} 
-
-          {% if is_self_service and is_observer %}
-          <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
-          <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
-          {% endif %} 
-
-
-          {% if is_technician %}
+          {% if user.is_technician %}
           <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
           {% endif %} 
 
-          {% if is_self_serivce %}
+          {% if user.is_self_serivce %}
           <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
           {% endif %} 
 
-          {% if is_observer %}
+          {% if user.is_observer %}
           <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
           {% endif %} 
 
@@ -67,6 +45,16 @@
       </li>
       
       {% if is_staff %}
+      <li>
+        <a href="#" class="desktop-item">Details</a>
+        <input type="checkbox" id="showDrop">
+        <label for="showDrop" class="mobile-item">Details</label>
+        <ul class="drop-menu">
+          <a href="{% url 'add_category_form' %}">Add Category</a><br>
+          <a href="{% url 'add_priority_form' %}">Add Priority</a><br>
+          <a href="{% url 'add_status_form' %}">Add Status</a>
+        </ul>
+      </li>
 
       <li>
         <a href="#" class="desktop-item">Users</a>
@@ -77,27 +65,13 @@
           <a href="{% url 'display_users' %}">Display Users</a>
         </ul>
       </li>
-
-      <li>
-        <a href="#" class="desktop-item">Add Stuff</a> 
-        <input type="checkbox" id="showDrop">
-        <label for="showDrop" class="mobile-item">Add Stuff</label>
-        <ul class="drop-menu">
-          <a href="{% url 'add_category_form' %}">Add Category</a>
-          <a href="{% url 'add_priority_form' %}">Add Priority</a>
-          <a href="{% url 'add_status_form' %}">Add Status</a>
-        </ul>
-      </li>
-
       <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
       {% endif %} 
 
       {% if is_observer or is_self_serivce %}
-
       <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
       {% endif %} 
       {% if is_technician %}
-
       {% endif %} 
 
     </ul>
@@ -110,19 +84,16 @@
 
 
 {% block content %}
-
+<!-- ALL -->
+<br /><br /><br /><br />
 {% if user.is_staff %}
 <div class="scroll-container">
   <div class="scroll-content">
 
-  <br /><br />
-  <div class="type_and_count">
-    <label class="type_tick" > All The Tickets Without filter </label>
-    <label class="count_tick" >( {{count_all_tickets}} )</label>
-  </div>
-
   <div class="firsttablecontainer">
-    <h1>Created Tickets</h1>
+
+    <h3>All The Tickets Without filter ( {{count_all_tickets}} )</h3>
+
     <table class="firsttable">
       <thead>
         <tr>
@@ -141,7 +112,65 @@
         {% if event.status.status_name != 'closed' %}
         <tr>
           <td>{{event.pk}}</td>
-          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a></td>
+          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+          <td> {{event.ticket_creation_date}}</td>
+          {% if event.assigned_to is not None %}
+          <td> {{event.assigned_to}}</td>
+          {% else %}
+          <td>Not Assigned</td>
+          {% endif %}
+          <td>{{event.assigned_by}}</td>
+          <td>{{event.category}}</td>
+          <td>{{event.priority}}</td>
+          <td>{{event.status}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
+
+
+{% endif %}
+
+<!-- Created By Me -->
+<br />
+{% if is_technician != True or user.is_staff %}
+
+<div class="scroll-container">
+  <div class="scroll-content">
+
+  <div class="firsttablecontainer">
+
+    <div class="title_and_export">
+      <h3> Created By Me ( {{count_my_tickets}} ) </h3>
+      {% if user.is_staff %}
+      <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
+      {% endif %}
+    </div>
+
+    <table class="firsttable">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Ticket Name</th>
+          <th>Creation Date</th>
+          <th>Assigned to</th>
+          <th>Creator</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for event in tickets_created_by_me %}
+        {% if event.status.status_name != 'closed' %}
+        <tr>
+          <td>{{event.pk}}</td>
+          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
           <td> {{event.ticket_creation_date}}</td>
           {% if event.assigned_to is not None %}
           <td> {{event.assigned_to}}</td>
@@ -163,103 +192,87 @@
 
 {% endif %}
 
-    <br /><br />
-    <div class="type_and_count">
-      <label class="type_tick" > Created By Me </label>
-      <label class="count_tick" >( {{count_my_tickets}} )</label>
-    </div>
+<!-- Assigned To ME  -->
+<br />
+<div class="scroll-container">
+  <div class="scroll-content">
 
-    <div class="card text-center">
-      {% for event in tickets_created_by_me %}
+  <div class="firsttablecontainer">
+    <h3>Assigned To Me ( {{count_to_me_tickets}} )</h3>
+    <table class="firsttable">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Ticket Name</th>
+          <th>Creation Date</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for event in tickets_assigned_to_me %}
         {% if event.status.status_name != 'closed' %}
-        <div class="card-header">
-          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Category : {{event.category}}</h5>
-          <p class="card-text">Description : {{event.description}}.</p>
-          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Delete</button>
-          </form>
-          <form action="{% url 'add_solution_form' ticket_title=event.title %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Solution</button>
-          </form>
-          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update/Assign</a>
-        </div>
-        <div class="card-footer text-muted">
-          {{event.ticket_creation_date}}
-        </div>
-        <br>
+        <tr>
+          <td>{{event.pk}}</td>
+          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+          <td> {{event.ticket_creation_date}}</td>
+          <td>{{event.category}}</td>
+          <td>{{event.priority}}</td>
+          <td>{{event.status}}</td>
+        </tr>
         {% endif %}
-      {% endfor %}
-    </div>
-    
-    <br /><br />
-    <div class="type_and_count">
-      <label class="type_tick" > Assigned To Me </label>
-      <label class="count_tick" >( {{count_to_me_tickets}} )</label>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
 
-    <div class="card text-center">
-      {% for event in tickets_assigned_to_me %}
-        {% if event.status.status_name != 'closed' %}
-        <div class="card-header">
-          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Category : {{event.category}}</h5>
-          <p class="card-text">Description : {{event.description}}.</p>
-          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Delete</button>
-          </form>
-          <form action="{% url 'add_solution_form' ticket_title=event.title %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Solution</button>
-          </form>
-          <a href="{% url 'update_ticket_form' ticket_title=event.title %}"class="btn btn-primary">Update/Assign</a>
-        </div>
-        <div class="card-footer text-muted">
-          {{event.ticket_creation_date}}
-        </div>
-        <br>
-        {% endif %}
-      {% endfor %}
-    </div>
+<!-- CLOSED -->
+<br />
+<div class="scroll-container">
+  <div class="scroll-content">
 
-    <br /><br />
-    <div class="type_and_count">
-      <label class="type_tick" > Closed ( Resolved ) Tickets </label>
-      <label class="count_tick" >( {{count_resolved_tickets}} )</label>
-    </div>
-
-    <div class="card text-center">
-      {% for event in tickets_solution_confirmed %}
+  <div class="firsttablecontainer">
+    <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} ) ) </h3>
+    <table class="firsttable">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Ticket Name</th>
+          <th>Creation Date</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for event in tickets_solution_confirmed %}
         {% if event.status.status_name == 'closed' %}
-        <div class="card-header">
-          <a href="{% url 'console_ticket' ticket_title=event.title %}">Title : {{event.title}}</a>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Category : {{event.category}}</h5>
-          <p class="card-text">Description : {{event.description}}.</p>
-          <form action="{% url 'delete_ticket' ticket_title=event.title %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Delete</button>
-          </form>
-        </div>
-        <div class="card-footer text-muted">
+        <tr>
+          <td>{{event.pk}}</td>
+          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+          <td>
           {% for solution in tickets_solution %}
             {%if solution.targeted_ticket == event%}
               {{solution.ticket_solution_date}}
             {% endif %}
           {% endfor %}
-        </div>
-        <br>
+          </td>
+          <td>{{event.category}}</td>
+          <td>{{event.priority}}</td>
+          <td>{{event.status}}</td>
+        </tr>
         {% endif %}
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
 
 {% endblock %}
 

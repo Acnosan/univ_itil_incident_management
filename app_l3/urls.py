@@ -7,7 +7,7 @@ urlpatterns = [
     path("logout/",views.logout_user,name="logout_user"),
     path("register/",views.register_user,name="register_user_form"), 
     path("users/",views.display_users,name="display_users"), 
-    path("user/update",views.update_user,name="update_user_form"), 
+    path("user/update/<str:target_username>/",views.update_user,name="update_user_form"), 
     
     path("ticket/create/",views.add_ticket,name="add_ticket_form"),
     path("ticket/<str:ticket_title>/",views.console_ticket,name="console_ticket"),
@@ -22,6 +22,7 @@ urlpatterns = [
     path("status/create",views.add_status,name="add_status_form"),
     
     path("ticket/solution/<str:ticket_title>/",views.add_solution,name="add_solution_form"),
+    path("export/<str:filename>",views.export_to_csv_by_me,name="export_to_csv"),
 ]
 
 

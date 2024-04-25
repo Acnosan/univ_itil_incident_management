@@ -34,10 +34,10 @@ class RegisterUserForm(forms.ModelForm):
             'number':  forms.NumberInput(attrs={}),
             'email': forms.EmailInput(attrs={}),
             'password': forms.PasswordInput(attrs={}),
-            'is_staff': forms.RadioSelect(),
-            'is_observer': forms.RadioSelect(),
-            'is_self_service': forms.RadioSelect(),
-            'is_technician': forms.RadioSelect(),
+            'is_observer':forms.CheckboxInput(),
+            'is_technician': forms.CheckboxInput(),
+            'is_self_service': forms.CheckboxInput(),
+            'is_staff':forms.CheckboxInput(),
         }
 
 class AddTicketsForm(forms.ModelForm):

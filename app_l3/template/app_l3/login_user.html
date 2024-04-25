@@ -18,12 +18,15 @@
 
         <h2>Login</h2> 
         {% if messages %}
-                {% for message in messages%}
-                <div class="alert alert-warning" id="myAlert">
-                    <span>{{ message }}</span>
-                    <button class="close-btn" onclick="closeAlert()">×</button>
-                </div>
-                {% endfor %}
+        {% for message in messages%}
+        <div class="alert alert-warning" id="myAlert"
+        style="padding: 10px; margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;">
+            <span class="message" style="display: inline-block;width: 600px;">{{ message }}</span>
+            <button class="close-btn" onclick="closeAlert()" 
+            style="font-size: 50px;font-weight: bold; color: #000;
+            text-shadow: 0 1px 0 #fff; cursor: pointer;border: none;background: transparent;"></button>
+        </div>
+        {% endfor %}
         {% endif %}
         
         <form action="{% url 'login_form' %}" class="Form" id="LoginForm" method="post">
@@ -56,6 +59,6 @@
 {% endblock %}
 
 {% block script%}
-<script src="{% static 'app_l3/script/alert.js' %}"></script>
+<script src="{% static 'app_l3/script/alert.js' %}" ></script>
 {%endblock%}
 

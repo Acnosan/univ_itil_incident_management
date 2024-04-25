@@ -4,13 +4,14 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class UserModel(AbstractUser):
-    
+
     username = models.CharField(max_length = 150,unique=True,blank=False,null=False)
     first_name = models.CharField(max_length = 100,blank=False,null=False)
     last_name = models.CharField(max_length = 150,blank=False,null=False)
     email = models.EmailField(blank=False,null=False)
     password = models.CharField(max_length = 100,blank=False,null=False)
     number = models.IntegerField(blank=False,null=False)
+
     is_observer = models.BooleanField(null=True,default=False)
     is_self_service = models.BooleanField(null=True,default=False)
     is_technician = models.BooleanField(null=True,default=False)
@@ -18,7 +19,7 @@ class UserModel(AbstractUser):
     is_active = models.BooleanField(null=True,default=True)
     is_superuser =  models.BooleanField(null=True,default=False)
     
-    REQUIRED_FIELDS = ['password']
+    REQUIRED_FIELDS = ['first_name','last_name','email','password','number']
     USERNAME_FIELD = 'username'
     
     class Meta:

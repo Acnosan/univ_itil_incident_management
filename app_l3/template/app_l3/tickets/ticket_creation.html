@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/TicketCreation.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/ticket_creation.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block title %}TicketCreation{% endblock %}
@@ -17,7 +17,7 @@
           TICKET CREATION
         </h1>
         <div class="puppy">
-          <img src="https://www.pngmart.com/files/3/Software-PNG-Transparent-Image-420x264.png" />
+          <img src="../../../static/app_l3/imgs/ticketCreation.png" />
         </div>
     </div>
 
@@ -58,10 +58,8 @@
 
           <div class="set">
             <div class="probprior">
-              <label for="priority-easy">Priority :</label>
-              <div class="radio-container">
+              <label for="probprior">Priority :</label>
                 {{ add_ticket_form.priority }}
-              </div>
             </div>
             <div class="attachment">
               <label for="attachment">attachment :</label>
@@ -77,7 +75,7 @@
         </header>
         <footer>
           <div class="set">
-            <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
+            <a href="{% url 'home' type_user=type_user %}" ><button type="button" id="next">Return</button></a>
             <button type="submit" id="next">Register</button>
           </div>
         </footer>
