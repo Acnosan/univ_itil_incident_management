@@ -91,8 +91,13 @@
   <div class="scroll-content">
 
   <div class="firsttablecontainer">
-
-    <h3>All The Tickets Without filter ( {{count_all_tickets}} )</h3>
+    <div class="title_and_export">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="q" placeholder="Search...">
+        <button class='search_button' type="submit" name="search">Search</button>
+      </form>
+    </div>
+    <h3>All The Tickets ( {{count_all_tickets}} )</h3>
 
     <table class="firsttable">
       <thead>
@@ -108,24 +113,46 @@
         </tr>
       </thead>
       <tbody>
-        {% for event in all_tickets %}
-        {% if event.status.status_name != 'closed' %}
-        <tr>
-          <td>{{event.pk}}</td>
-          <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
-          <td> {{event.ticket_creation_date}}</td>
-          {% if event.assigned_to is not None %}
-          <td> {{event.assigned_to}}</td>
-          {% else %}
-          <td>Not Assigned</td>
+        {% if not searched %}  <!--   -->
+          {% for event in all_tickets %}
+          {% if event.status.status_name != 'closed'%}
+          <tr>
+            <td>{{event.pk}}</td>
+            <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+            <td> {{event.ticket_creation_date}}</td>
+            {% if event.assigned_to is not None %}
+            <td> {{event.assigned_to}}</td>
+            {% else %}
+            <td>Not Assigned</td>
+            {% endif %}
+            <td>{{event.assigned_by}}</td>
+            <td>{{event.category}}</td>
+            <td>{{event.priority}}</td>
+            <td>{{event.status}}</td>
+          </tr>
           {% endif %}
-          <td>{{event.assigned_by}}</td>
-          <td>{{event.category}}</td>
-          <td>{{event.priority}}</td>
-          <td>{{event.status}}</td>
-        </tr>
-        {% endif %}
-        {% endfor %}
+          {% endfor %}
+        {% else %} <!--   -->
+          {% for event in all_tickets %}
+          {% if event.status.status_name != 'closed'%}
+          <tr>
+            <td>{{event.pk}}</td>
+            <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+            <td> {{event.ticket_creation_date}}</td>
+            {% if event.assigned_to is not None %}
+            <td> {{event.assigned_to}}</td>
+            {% else %}
+            <td>Not Assigned</td>
+            {% endif %}
+            <td>{{event.assigned_by}}</td>
+            <td>{{event.category}}</td>
+            <td>{{event.priority}}</td>
+            <td>{{event.status}}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        {% endif %}  <!--   -->
+
       </tbody>
     </table>
   </div>

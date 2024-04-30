@@ -55,7 +55,7 @@ tbody td {
   height: 50px;
   border-radius: 0.5rem;
   border: 0;
-  background: rgba(89,1,91,1.00);;
+  background: rgba(89,1,91,1.00);
   color: #f9f9f9;
   text-align: center;
   letter-spacing: 3px;
@@ -80,12 +80,23 @@ tbody td {
   align-items: center; /* Align items vertically */
 }
 
-.export_button {
+.export_button,.search_button {
   margin-left: auto; /* Push the form/button to the right */
 }
 
 /* Optional: Add additional styling as needed */
-.title_and_export h3 {
+.title_and_export h3,.title_and_export input {
   margin-right: 10px; /* Add spacing between h3 and form */
 }
 
+.title_and_export input{
+  position: relative;
+  background: rgba(89,1,91,1.00);
+  border: none;
+  outline: none;
+  padding: 15px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}

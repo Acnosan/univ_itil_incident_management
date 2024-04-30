@@ -23,6 +23,7 @@ urlpatterns = [
     
     path("ticket/solution/<str:ticket_title>/",views.add_solution,name="add_solution_form"),
     path("export/<str:filename>",views.export_to_csv_by_me,name="export_to_csv"),
+    
 ]
 
 

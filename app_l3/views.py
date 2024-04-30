@@ -21,9 +21,10 @@ def home(response,type_user):
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
     tickets_solution_confirmed = tickets_solution = None
     is_staff=is_observer=is_technician=is_self_service = None
+    searched= False
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
-    
+    query = response.GET.get('q')
     if type_user == 'staff' : 
         is_staff = True
         user = UserModel.objects.get(username=username)
@@ -44,6 +45,10 @@ def home(response,type_user):
     response.session['type_user'] = type_user
     try:
         all_tickets = TicketsModel.objects.all()
+        
+        if 'search' in response.GET and query:
+            searched=True
+            all_tickets = all_tickets.filter(title=query) 
     except TicketsModel.DoesNotExist:
         pass
     
@@ -85,12 +90,13 @@ def home(response,type_user):
         count_all_tickets = all_tickets.count()
     except:
         pass
+    
 
     context = {'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
     'tickets_solution_confirmed':tickets_solution_confirmed,'tickets_solution':tickets_solution,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
-    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets}
+    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'searched':searched}
     return render(response, "template/app_l3/home.html", context)
 
 def login_user(response):
