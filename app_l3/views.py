@@ -21,10 +21,9 @@ def home(response,type_user):
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
     tickets_solution_confirmed = tickets_solution = None
     is_staff=is_observer=is_technician=is_self_service = None
-    searched= False
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
-    query = response.GET.get('q')
+    search_input = response.GET.get('search_input')
     if type_user == 'staff' : 
         is_staff = True
         user = UserModel.objects.get(username=username)
@@ -46,14 +45,15 @@ def home(response,type_user):
     try:
         all_tickets = TicketsModel.objects.all()
         
-        if 'search' in response.GET and query:
-            searched=True
-            all_tickets = all_tickets.filter(title=query) 
+        if 'search' in response.GET and search_input:
+            all_tickets = all_tickets.filter(title__startswith=search_input) 
     except TicketsModel.DoesNotExist:
         pass
     
     try:
         tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user)
+        if 'search' in response.GET and search_input:
+            tickets_created_by_me = tickets_created_by_me.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
         pass
     
@@ -96,7 +96,7 @@ def home(response,type_user):
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
     'tickets_solution_confirmed':tickets_solution_confirmed,'tickets_solution':tickets_solution,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
-    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'searched':searched}
+    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets}
     return render(response, "template/app_l3/home.html", context)
 
 def login_user(response):

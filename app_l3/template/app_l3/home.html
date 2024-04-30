@@ -24,16 +24,13 @@
 
           {% if user.is_staff %}
           <li><a href="{% url 'home' type_user='staff' %}">Staff</a></li>
-          <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
-          <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
-          <li><a href="{% url 'home' type_user='observer' %}">Observer</a></li>
           {% endif %} 
 
           {% if user.is_technician %}
           <li><a href="{% url 'home' type_user='technician' %}">Technician</a></li>
           {% endif %} 
 
-          {% if user.is_self_serivce %}
+          {% if user.is_self_service %}
           <li><a href="{% url 'home' type_user='self_service' %}">selfService</a></li>
           {% endif %} 
 
@@ -68,7 +65,7 @@
       <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
       {% endif %} 
 
-      {% if is_observer or is_self_serivce %}
+      {% if is_observer or is_self_service %}
       <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
       {% endif %} 
       {% if is_technician %}
@@ -93,7 +90,7 @@
   <div class="firsttablecontainer">
     <div class="title_and_export">
       <form method="GET" action="{% url 'home' type_user=type_user %}">
-        <input type="text" name="q" placeholder="Search...">
+        <input type="text" name="search_input" placeholder="Search name ...">
         <button class='search_button' type="submit" name="search">Search</button>
       </form>
     </div>
@@ -113,64 +110,46 @@
         </tr>
       </thead>
       <tbody>
-        {% if not searched %}  <!--   -->
           {% for event in all_tickets %}
           {% if event.status.status_name != 'closed'%}
-          <tr>
-            <td>{{event.pk}}</td>
-            <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
-            <td> {{event.ticket_creation_date}}</td>
-            {% if event.assigned_to is not None %}
-            <td> {{event.assigned_to}}</td>
-            {% else %}
-            <td>Not Assigned</td>
-            {% endif %}
-            <td>{{event.assigned_by}}</td>
-            <td>{{event.category}}</td>
-            <td>{{event.priority}}</td>
-            <td>{{event.status}}</td>
-          </tr>
+            <tr>
+              <td>{{event.pk}}</td>
+              <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
+              <td> {{event.ticket_creation_date}}</td>
+              {% if event.assigned_to is not None %}
+              <td> {{event.assigned_to}}</td>
+              {% else %}
+              <td>Not Assigned</td>
+              {% endif %}
+              <td>{{event.assigned_by}}</td>
+              <td>{{event.category}}</td>
+              <td>{{event.priority}}</td>
+              <td>{{event.status}}</td>
+            </tr>
           {% endif %}
           {% endfor %}
-        {% else %} <!--   -->
-          {% for event in all_tickets %}
-          {% if event.status.status_name != 'closed'%}
-          <tr>
-            <td>{{event.pk}}</td>
-            <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
-            <td> {{event.ticket_creation_date}}</td>
-            {% if event.assigned_to is not None %}
-            <td> {{event.assigned_to}}</td>
-            {% else %}
-            <td>Not Assigned</td>
-            {% endif %}
-            <td>{{event.assigned_by}}</td>
-            <td>{{event.category}}</td>
-            <td>{{event.priority}}</td>
-            <td>{{event.status}}</td>
-          </tr>
-          {% endif %}
-          {% endfor %}
-        {% endif %}  <!--   -->
-
       </tbody>
     </table>
   </div>
   </div>
 </div>
 
-
 {% endif %}
 
 <!-- Created By Me -->
 <br />
-{% if is_technician != True or user.is_staff %}
+{% if not is_technician %}
 
 <div class="scroll-container">
   <div class="scroll-content">
 
   <div class="firsttablecontainer">
-
+    <div class="title_and_export">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="search_input" placeholder="Search name ...">
+        <button class='search_button' type="submit" name="search">Search</button>
+      </form>
+    </div>
     <div class="title_and_export">
       <h3> Created By Me ( {{count_my_tickets}} ) </h3>
       {% if user.is_staff %}
