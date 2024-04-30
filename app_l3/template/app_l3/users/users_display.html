@@ -4,7 +4,7 @@
 
 {% block css%}
 <link href="{% static 'app_l3/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
-<link href="{% static 'app_l3/login_style.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/register_style.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Display{% endblock %}
 
@@ -23,7 +23,10 @@
             <br/>
         {% endfor %}   
         <br/><br/>
-        <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
+        <div class="set">
+            <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
+            <a href="{% url 'register_user_form' %}" style="font-size: 13px;" ><button type="button" >Register User</button></a>
+        </div>
     </div>
 </div>
 {% endblock %}

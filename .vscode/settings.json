@@ -8,6 +8,7 @@
         "app_l3\\backends.py": true,
         "app_l3\\base.html": true,
         "app_l3\\tests.py": true,
-        "app_l3\\static\\app_l3\\bootstrap.min.css": true
+        "app_l3\\static\\app_l3\\bootstrap.min.css": true,
+        "django_pfe.code-workspace": true
     }
 }

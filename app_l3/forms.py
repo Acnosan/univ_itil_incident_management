@@ -150,3 +150,7 @@ class AddTicketSolutionForm(forms.ModelForm):
         widgets = {  
             'solution_description': forms.Textarea(attrs={'placeholder':"Description"}),
         }
+
+class PriorityFilter(forms.Form):
+    filter_value = forms.ModelChoiceField(queryset=PriorityModel.objects.all(), empty_label="Select Priority",
+                                        label='',widget=forms.Select(attrs={'class': 'filter_form'}))

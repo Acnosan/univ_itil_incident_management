@@ -1,13 +1,16 @@
 @charset "utf-8";
 /* CSS Document */
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap');
+@font-face {
+    font-family: "Quicksand";
+    src: url(fonts/Quicksand-Medium.ttf);
+}
 
 body {
     align-items: center;
     background: #D8AA96;
     color: rgba(0,0,0,.8);
     display: grid;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     font-size: 14px;
     font-weight:bold;
     height: 100vh;
@@ -152,7 +155,6 @@ label{
     line-height: 38px;
     width: 100px;
     border-radius: 19px;
-    font-family: 'Montserrat', sans-serif;
     text-decoration: none;
     text-align: center;
 }

@@ -158,7 +158,7 @@ class TicketSolutionModel(models.Model):
     
     class Meta:
         db_table = 'tickets_solutions_table'
-        
+
 class TicketSolutionAttachmentModel(models.Model):
     
     targeted_solution = models.ForeignKey(TicketSolutionModel,on_delete=models.PROTECT,blank=False,null=False)
@@ -166,5 +166,5 @@ class TicketSolutionAttachmentModel(models.Model):
     
     class Meta:
         db_table = 'tickets_solutions_attachment_table'
-        
+
 

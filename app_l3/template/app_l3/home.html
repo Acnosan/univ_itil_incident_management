@@ -87,15 +87,25 @@
 <div class="scroll-container">
   <div class="scroll-content">
 
-  <div class="firsttablecontainer">
-    <div class="title_and_export">
-      <form method="GET" action="{% url 'home' type_user=type_user %}">
-        <input type="text" name="search_input" placeholder="Search name ...">
-        <button class='search_button' type="submit" name="search">Search</button>
-      </form>
-    </div>
-    <h3>All The Tickets ( {{count_all_tickets}} )</h3>
+    <div class="pos_search_title">
+      <div class="title_and_export">
+        <h3>All The Tickets ( {{count_all_tickets}} )</h3>
+      </div>
 
+      <div class="search_form">
+          <form method="GET" action="{% url 'home' type_user=type_user %}">
+            <input type="text" name="search_input" placeholder="Search name ...">
+            <button class='search_button' type="submit" name="search_all">Search</button>
+          </form>
+      </div>
+        <form method="POST" class="filter_form" >
+          {% csrf_token %}
+          {{ priority_filter }}
+          <button type="submit" class="filter_button">Filter</button>
+        </form>
+    </div>
+
+  <div class="firsttablecontainer">
     <table class="firsttable">
       <thead>
         <tr>
@@ -139,24 +149,27 @@
 <!-- Created By Me -->
 <br />
 {% if not is_technician %}
-
+<body>
+  
 <div class="scroll-container">
   <div class="scroll-content">
 
-  <div class="firsttablecontainer">
-    <div class="title_and_export">
-      <form method="GET" action="{% url 'home' type_user=type_user %}">
-        <input type="text" name="search_input" placeholder="Search name ...">
-        <button class='search_button' type="submit" name="search">Search</button>
-      </form>
-    </div>
-    <div class="title_and_export">
-      <h3> Created By Me ( {{count_my_tickets}} ) </h3>
-      {% if user.is_staff %}
-      <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
-      {% endif %}
+    <div class="pos_search_title">
+      <div class="title_and_export">
+        <h3> Created By Me ( {{count_my_tickets}} ) </h3>
+        {% if user.is_staff %}
+        <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
+        {% endif %}
+      </div>
+      <div class="search_form">
+          <form method="GET" action="{% url 'home' type_user=type_user %}">
+            <input type="text" name="search_input" placeholder="Search name ...">
+            <button class='search_button' type="submit" name="search_by_me">Search</button>
+          </form>
+      </div>
     </div>
 
+  <div class="firsttablecontainer">
     <table class="firsttable">
       <thead>
         <tr>
@@ -203,8 +216,21 @@
 <div class="scroll-container">
   <div class="scroll-content">
 
+    <div class="pos_search_title">
+      <div class="title_and_export">
+        <h3>Assigned To Me ( {{count_to_me_tickets}} )</h3>
+      </div>
+
+      <div class="search_form">
+          <form method="GET" action="{% url 'home' type_user=type_user %}">
+            <input type="text" name="search_input" placeholder="Search name ...">
+            <button class='search_button' type="submit" name="search_to_me">Search</button>
+          </form>
+      </div>
+  
+    </div>
+
   <div class="firsttablecontainer">
-    <h3>Assigned To Me ( {{count_to_me_tickets}} )</h3>
     <table class="firsttable">
       <thead>
         <tr>
@@ -241,8 +267,20 @@
 <div class="scroll-container">
   <div class="scroll-content">
 
+    <div class="pos_search_title">
+      <div class="title_and_export">
+        <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} ) ) </h3>
+      </div>
+
+      <div class="search_form">
+          <form method="GET" action="{% url 'home' type_user=type_user %}">
+            <input type="text" name="search_input" placeholder="Search name ...">
+            <button class='search_button' type="submit" name="search_closed">Search</button>
+          </form>
+      </div>
+    </div>
+
   <div class="firsttablecontainer">
-    <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} ) ) </h3>
     <table class="firsttable">
       <thead>
         <tr>
@@ -262,7 +300,7 @@
           <td>{{event.pk}}</td>
           <td><a href="{% url 'console_ticket' ticket_title=event.title %}">{{event.title}}</a></td>
           <td>
-          {% for solution in tickets_solution %}
+          {% for solution in ticket_solutions %}
             {%if solution.targeted_ticket == event%}
               {{solution.ticket_solution_date}}
             {% endif %}
@@ -280,7 +318,6 @@
   </div>
 </div>
 
+</body>
 {% endblock %}
 
-{% block footer %}
-{% endblock %}

@@ -5,10 +5,9 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from django.contrib import messages
 from .forms import RegisterUserForm,AddTicketsForm,AddTicketSolutionForm
-from .forms import AddCategoryForm,AddPriorityForm,AddStatusForm
+from .forms import AddCategoryForm,AddPriorityForm,AddStatusForm,PriorityFilter
 from .models import UserModel,TicketsModel,TicketSolutionModel,TicketSolutionAttachmentModel
-from .models import TechnicianModel,AdminModel,ObserverModel,SelfServiceModel
-from .models import CategoryModel,PriorityModel,StatusModel
+from .models import TechnicianModel,AdminModel,ObserverModel,SelfServiceModel,StatusModel
 from datetime import date,datetime
 import csv
 
@@ -19,7 +18,7 @@ import os
 
 def home(response,type_user):
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
-    tickets_solution_confirmed = tickets_solution = None
+    tickets_solution_confirmed = ticket_solutions = None
     is_staff=is_observer=is_technician=is_self_service = None
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
@@ -45,14 +44,22 @@ def home(response,type_user):
     try:
         all_tickets = TicketsModel.objects.all()
         
-        if 'search' in response.GET and search_input:
+        if 'search_all' in response.GET and search_input:
             all_tickets = all_tickets.filter(title__startswith=search_input) 
+        if response.method == 'POST':
+            priority_filter = PriorityFilter(response.POST)
+            if priority_filter.is_valid():
+                filter_value = priority_filter.cleaned_data['filter_value']
+                all_tickets = all_tickets.filter(priority=filter_value).order_by('-ticket_creation_date')
+        else:
+            priority_filter = PriorityFilter()
+            
     except TicketsModel.DoesNotExist:
         pass
     
     try:
         tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user)
-        if 'search' in response.GET and search_input:
+        if 'search_by_me' in response.GET and search_input:
             tickets_created_by_me = tickets_created_by_me.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
         pass
@@ -64,6 +71,8 @@ def home(response,type_user):
             tech=None
             pass
         tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=tech)
+        if 'search_to_me' in response.GET and search_input:
+            tickets_assigned_to_me = tickets_assigned_to_me.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
         pass
         
@@ -75,11 +84,13 @@ def home(response,type_user):
             status=None
             pass
         tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
+        if 'search_closed' in response.GET and search_input:
+            tickets_solution_confirmed = tickets_solution_confirmed.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
         pass
         
     try:
-        tickets_solution = TicketSolutionModel.objects.filter(confirmed_solution=True)
+        ticket_solutions = TicketSolutionModel.objects.filter(confirmed_solution=True)
     except TicketSolutionModel.DoesNotExist:
         pass
         
@@ -92,11 +103,12 @@ def home(response,type_user):
         pass
     
 
-    context = {'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
+    context = {
+    'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
-    'tickets_solution_confirmed':tickets_solution_confirmed,'tickets_solution':tickets_solution,
+    'tickets_solution_confirmed':tickets_solution_confirmed,'ticket_solutions':ticket_solutions,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
-    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets}
+    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'priority_filter':priority_filter}
     return render(response, "template/app_l3/home.html", context)
 
 def login_user(response):

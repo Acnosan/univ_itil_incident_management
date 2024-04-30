@@ -68,11 +68,10 @@
             <label for="id_is_observer">observer</label>
           </div>
         </div>
-
-        <div class="inputBox"> 
-          <input type="submit" value="Register"> 
-          <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
-        </div> 
+        <div class="set">
+          <a href="{% url 'home' type_user=type_user %}" ><button type="button" id="next">Return</button></a>
+          <button type="submit">Register</button>
+        </div>
       </form>
   </div> 
 
