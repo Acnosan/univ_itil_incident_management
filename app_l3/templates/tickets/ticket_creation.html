@@ -8,7 +8,6 @@
 
 {% block title %}TicketCreation{% endblock %}
 
-
 {% block content %}
 <div class="signup-container">
     <div class="left-container">
@@ -21,7 +20,7 @@
         </div>
     </div>
 
-  <form action="{% url 'add_ticket_form' %}" method="post" enctype="multipart/form-data">
+  <form action={} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="right-container">
         <header>
@@ -75,8 +74,8 @@
         </header>
         <footer>
           <div class="set">
-            <a href="{% url 'home' type_user=type_user %}" ><button type="button" id="next">Return</button></a>
-            <button type="submit" id="next">Register</button>
+            <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
+            <button type="submit" >Register</button>
           </div>
         </footer>
     </div>

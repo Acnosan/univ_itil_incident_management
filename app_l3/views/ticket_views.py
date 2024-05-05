@@ -124,26 +124,37 @@ def add_ticket(response):
     context=  {'add_ticket_form': add_ticket_form,'type_user':type_user,'is_staff':is_staff}
     return render(response, "templates/tickets/ticket_creation.html", context)
 
-def console_ticket(response,ticket_title):
+def console_ticket(response,ticket_id):
     type_user = response.session.get('type_user')
-    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+    ticket = get_object_or_404(TicketsModel, pk=ticket_id)
     ticket_solution = TicketSolutionModel.objects.filter(targeted_ticket=ticket)
-    context = {'type_user': type_user,'ticket_display': ticket,'ticket_solution':ticket_solution}
+    
+    solution_ticket_form =  AddTicketSolutionForm(response.POST)
+    
+    context = {'type_user': type_user,'ticket_display': ticket,'ticket_solution':ticket_solution,'solution_ticket_form':solution_ticket_form}
     return render(response, "templates/tickets/ticket_display.html", context)
 
-def update_ticket(response,ticket_title):
+def update_ticket(response,ticket_id):
     type_user = response.session.get('type_user')
-    ticket = TicketsModel.objects.get(title=ticket_title)
-    update_ticket_form = AddTicketsForm(response.POST or None,response.FILES, instance=ticket)
-    
-    if update_ticket_form.is_valid():
-        if update_ticket_form.instance.assigned_to is not None:
-            ticket.status = StatusModel.objects.get(status_name='ongoing')
-        update_ticket_form.save()
-        return redirect('home', type_user=type_user)
-
-    print(update_ticket_form.errors)
-    context = {'type_user': type_user, 'ticket_title': ticket.title, 'update_ticket_form': update_ticket_form}
+    is_staff = False 
+    if type_user == 'staff' : 
+        is_staff = True
+        
+    ticket = TicketsModel.objects.get(pk=ticket_id)
+    if response.method == 'POST':
+        update_ticket_form = AddTicketsForm(response.POST or None,response.FILES, instance=ticket)
+        
+        if update_ticket_form.is_valid():
+            if update_ticket_form.instance.assigned_to is not None:
+                ticket.status = StatusModel.objects.get(status_name='ongoing')
+            update_ticket_form.save()
+            return redirect('home', type_user=type_user)
+        print(update_ticket_form.errors)
+        
+    else:
+        update_ticket_form = AddTicketsForm(instance=ticket)
+        
+    context = {'type_user': type_user,'is_staff':is_staff,'ticket_id':ticket.id,'update_ticket_form': update_ticket_form}
     return render(response, "templates/tickets/ticket_update.html", context)
 
 def delete_ticket(response,ticket_title):
@@ -176,9 +187,9 @@ def confirm_ticket(response,ticket_title,solution_id):
         # Handle GET requests or other methods
         return HttpResponse("Method not allowed", status=405)
 
-def add_solution(response,ticket_title):
+def add_solution(response,ticket_id):
     type_user = response.session.get('type_user')
-    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+    ticket = get_object_or_404(TicketsModel, pk=ticket_id)
     if response.method == "POST":
         targeted_ticket_form = AddTicketsForm(instance=ticket)
         solution_ticket_form =  AddTicketSolutionForm(response.POST)
@@ -189,12 +200,12 @@ def add_solution(response,ticket_title):
             ticket.status = StatusModel.objects.get(status_name='solved')
             ticket.save()
             solution_ticket_form.save()
-            return redirect('console_ticket',ticket_title=ticket_title)
+            return redirect('console_ticket',pk=ticket_id)
     else:
         targeted_ticket_form = AddTicketsForm(instance=ticket)
         solution_ticket_form =  AddTicketSolutionForm()
         
-    context = {'type_user':type_user,'ticket_title':ticket.title,'targeted_ticket_form':targeted_ticket_form,'solution_ticket_form':solution_ticket_form}
+    context = {'type_user':type_user,'ticket_id':ticket.id,'targeted_ticket_form':targeted_ticket_form,'solution_ticket_form':solution_ticket_form}
     return render(response,"templates/tickets/ticket_solution.html",context)
 
 def download_solution(response,ticket_title,solution_id):

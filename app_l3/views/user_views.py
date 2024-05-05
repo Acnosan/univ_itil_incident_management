@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.password_validation import password_validators_help_texts
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.hashers import make_password
@@ -117,6 +117,19 @@ def update_user(response,target_username):
 
 def display_users(response):
     type_user = response.session.get('type_user')
+    search_input = response.GET.get('search_input')
     users = UserModel.objects.all()
-    context = {'type_user': type_user,'users_display': users}
+    count_all_users = users.count()
+    
+    if 'search_all' in response.GET and search_input:
+            users = users.filter(last_name__startswith=search_input) 
+            
+    context = {'type_user': type_user,'users_display': users,'count_all_users':count_all_users}
     return render(response, "templates/users/users_display.html", context)
+
+def display_user(response,user_id):
+    type_user = response.session.get('type_user')
+    user = get_object_or_404(UserModel, pk=user_id)
+
+    context = {'type_user': type_user,'user': user}
+    return render(response, "templates/users/user_display.html", context)

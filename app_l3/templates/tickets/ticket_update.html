@@ -16,57 +16,69 @@
           UPDATE TICKET
         </h1>
         <div class="puppy">
-          <img src="https://www.pngmart.com/files/3/Software-PNG-Transparent-Image-420x264.png" />
+          <img src="../../../static/app_l3/imgs/ticketCreation.png" />
         </div>
     </div>
-
-  <form action="{% url 'update_ticket_form' ticket_title=ticket_title %}" method="post">
-    {% csrf_token %}
-    <div class="right-container">
-        <header>
-          <h1>Spécifiez les information de ticket</h1>
-          <div class="set">
-            <div class="prob-name">
-              <label for="prob-name">Nom de Ticket</label>
-                {{ update_ticket_form.title }}
+    <form action="{% url 'update_ticket_form' ticket_id=ticket_id %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="right-container">
+          <header>
+            <h1>Spécifiez les information de ticket</h1>
+            <div class="set">
+              <div class="prob-name">
+                <label for="prob-name">Nom de Ticket :</label>
+                  {{ update_ticket_form.title }}
+              </div>
             </div>
-          </div>
-
-          <div class="set">
-            <div class="systemtype">
-              <label for="systemtype">Actif Informatique Ciblé</label>
-                {{ update_ticket_form.category }}
+  
+            <div class="set">
+              <div class="systemtype">
+                <label for="systemtype">Actif Informatique Ciblé :</label>
+                  {{ update_ticket_form.category }}
+              </div>
+              {% if is_staff %}
+              <div class="technic">
+                <label for="technic">Technicien :</label>
+                  {{ update_ticket_form.assigned_to }}
+              </div>
+              <div class="status">
+                <label for="status">Status :</label>
+                  {{ update_ticket_form.status }}
+              </div>
+              {% else %}
+              <div class="status">
+                <label for="status">Status :</label>
+                  {{ update_ticket_form.status }}
+              </div>
+              {% endif %} 
+  
             </div>
-            <div class="technic">
-              <label for="technic">Technicien</label>
-                {{ update_ticket_form.assigned_to }}
+  
+            <div class="set">
+              <div class="probprior">
+                <label for="probprior">Priority :</label>
+                  {{ update_ticket_form.priority }}
+              </div>
+              <div class="attachment">
+                <label for="attachment">attachment :</label>
+                  {{update_ticket_form.attachment}} 
+              </div>
             </div>
-            <div class="status">
-              <label for="status">Status</label>
-                {{ update_ticket_form.status }}
+  
+            <div class="description">
+              <label for="description">description :</label>
+                {{ update_ticket_form.description }}
             </div>
-          </div>
-
-          <div class="description">
-            <label for="description">description</label>
-              {{ update_ticket_form.description }}
-          </div>
-
-          <div class="probprior">
-            <label for="priority-easy">Priority</label>
-            <div class="radio-container">
-              {{ update_ticket_form.priority }}
+            
+          </header>
+          <footer>
+            <div class="set">
+              <a href="{% url 'console_ticket' ticket_id=ticket_id %}" ><button type="button">Return</button></a>
+              <button type="submit" id="next">Register</button>
             </div>
-          </div>
-        </header>
-        <footer>
-          <div class="set">
-            <a href="{% url 'home' type_user=type_user %}" ><label id="back" name="return" >Cancel</label></a>
-            <button  type="submit" id="next">Update</button>
-          </div>
-        </footer>
-    </div>
-  </form>
+          </footer>
+      </div>
+    </form>
 
 </div>
 

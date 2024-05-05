@@ -3,58 +3,67 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/display_style.css' %}" rel="stylesheet" type="text/css">
+<!--<link href="{% static 'app_l3/display_style.css' %}" rel="stylesheet" type="text/css">-->
+<link href="{% static 'app_l3/tickets_tables.css' %}" type="text/css" rel="stylesheet" >
 {% endblock %}
 
-{% block title %}Display{% endblock %}
+{% block title %}DisplayUsers{% endblock %}
 
 {% block content %}
 
-<body>
-    <div class="mainscreen">
-        <div class="card">
-            <div class="leftside">
-            <img
-                src="https://static.vecteezy.com/system/resources/previews/025/009/619/large_2x/3d-render-abstract-simple-neon-background-ultra-violet-rays-blue-and-pink-glowing-lines-cyber-network-data-speed-of-light-space-and-time-strings-ai-generative-free-photo.jpg"
-                class="profilepic"
-                alt="pfp"
-            />
-            </div>
-            <div class="rightside">
-                <h1>User Details</h1>
-                {% for user in users_display %}
-                <div class="container">
-
-                <div class="box">
-                    <h2>(+)Firstname / Lastname </h2>
-                    <p>{{ user.first_name }} / {{ user.last_name }}</p>
-
-                    <h2>(+) ID / Username</h2>
-                    <p>{{ user.id }} / <a href="{% url 'update_user_form' target_username=user.username %}">{{ user.username }}</a></p>
-                </div>  
-
-                <div class="box">
-                    <h2>(+)Number / Email</h2>
-                    <p>{{ user.number }} / {{ user.email }}</p>
-
-                    <h2>(+)Class : {% if user.is_staff %} STAFF {%endif%}
-                        {% if user.is_observer %} OBSERVER {%endif%}
-                        {% if user.is_self_service %}SELF SERVICE{%endif%}
-                        {% if user.is_technician %}TECHNICIAN{%endif%}
-                    </h2>
-                </div>  
-                
-                </div>  
-                {% endfor %}
-
-                <div class="set">
-                    <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
-                    <a href="{% url 'register_user_form' %}" style="font-size: 13px;" ><button type="button" >Register User</button></a>
-                </div>
-
-                <h2></h2>
-            </div>
+<div class="scroll-container">
+    <div class="scroll-content">
+  
+      <div class="pos_search_title">
+        <div class="title_and_export">
+          <h3>All Users ( {{count_all_users}} )</h3>
         </div>
+  
+        <div class="search_form">
+            <form method="GET" action="">
+              <input type="text" name="search_input" placeholder="Search LastName ...">
+              <button class='search_button' type="submit" name="search_all">Search</button>
+            </form>
+        </div>
+          <form method="POST" class="filter_form" >
+            {% csrf_token %}
+            {{ priority_filter }}
+            <button type="submit" class="filter_button">Filter</button>
+          </form>
+      </div>
+  
+    <div class="firsttablecontainer">
+      <table class="firsttable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Username</th>
+            <th>Number</th>
+            <th>Email</th>
+            <th>Class</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for user in users_display %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td><a href="{% url 'display_user' user_id=user.id %}">{{ user.first_name}}</a></td>
+                <td>{{ user.last_name}}</td>
+                <td>{{ user.username}}</td>
+                <td>{{user.number}}</td>
+                <td>{{user.email}}</td>
+                <td>{% if user.is_staff %} STAFF {%endif%}
+                    {% if user.is_observer %} OBSERVER {%endif%}
+                    {% if user.is_self_service %}SELF SERVICE{%endif%}
+                    {% if user.is_technician %}TECHNICIAN{%endif%}</td>
+              </tr>
+            {% endfor %}
+        </tbody>
+      </table>
     </div>
-</body>
+    </div>
+</div>
+
 {% endblock %}
