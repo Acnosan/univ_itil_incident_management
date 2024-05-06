@@ -9,8 +9,7 @@
 {% block title %}ReTech{% endblock %}}
 
 {% block navbar %}
-
-  <nav>
+<nav>
   <div class="wrapper">
     <div class="logo"><a href="#">Incident<span style="color: black;">Management</span></a></div>
     <input type="radio" name="slider" id="menu-btn">
@@ -59,7 +58,7 @@
         <label for="showDrop" class="mobile-item">Users</label>
         <ul class="drop-menu">
           <a href="{% url 'register_user_form' %}">Register User</a>
-          <a href="{% url 'display_users' %}">Display Users</a>
+          <a id='showUsersBtn' href="#UsersTable" >Display Users</a>
         </ul>
       </li>
       <li><a href="{% url 'add_ticket_form' %}">Add Ticket</a></li>
@@ -76,34 +75,34 @@
     <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
   </div>
 </nav>
-
 {% endblock %} 
 
 
 {% block content %}
 <!-- ALL -->
-<br /><br /><br /><br />
+<body>
+<br />
 {% if user.is_staff %}
+
+<div class="pos_search_title">
+  <div class="title_and_export">
+    <h3>All The Tickets ( {{count_all_tickets}} )</h3>
+  </div>
+  <div class="search_form">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="search_input" placeholder="Search name ...">
+        <button class='search_button' type="submit" name="search_all">Search</button>
+      </form>
+  </div>
+    <form method="POST" class="filter_form" >
+      {% csrf_token %}
+      {{ priority_filter }}
+      <button type="submit" class="filter_button">Filter</button>
+    </form>
+</div>
+
 <div class="scroll-container">
   <div class="scroll-content">
-
-    <div class="pos_search_title">
-      <div class="title_and_export">
-        <h3>All The Tickets ( {{count_all_tickets}} )</h3>
-      </div>
-
-      <div class="search_form">
-          <form method="GET" action="{% url 'home' type_user=type_user %}">
-            <input type="text" name="search_input" placeholder="Search name ...">
-            <button class='search_button' type="submit" name="search_all">Search</button>
-          </form>
-      </div>
-        <form method="POST" class="filter_form" >
-          {% csrf_token %}
-          {{ priority_filter }}
-          <button type="submit" class="filter_button">Filter</button>
-        </form>
-    </div>
 
   <div class="firsttablecontainer">
     <table class="firsttable">
@@ -149,25 +148,24 @@
 <!-- Created By Me -->
 <br />
 {% if not is_technician %}
-<body>
-  
+
+<div class="pos_search_title">
+  <div class="title_and_export">
+    <h3> Created By Me ( {{count_my_tickets}} ) </h3>
+    {% if user.is_staff %}
+    <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
+    {% endif %}
+  </div>
+  <div class="search_form">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="search_input" placeholder="Search name ...">
+        <button class='search_button' type="submit" name="search_by_me">Search</button>
+      </form>
+  </div>
+</div>
+
 <div class="scroll-container">
   <div class="scroll-content">
-
-    <div class="pos_search_title">
-      <div class="title_and_export">
-        <h3> Created By Me ( {{count_my_tickets}} ) </h3>
-        {% if user.is_staff %}
-        <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
-        {% endif %}
-      </div>
-      <div class="search_form">
-          <form method="GET" action="{% url 'home' type_user=type_user %}">
-            <input type="text" name="search_input" placeholder="Search name ...">
-            <button class='search_button' type="submit" name="search_by_me">Search</button>
-          </form>
-      </div>
-    </div>
 
   <div class="firsttablecontainer">
     <table class="firsttable">
@@ -213,22 +211,21 @@
 
 <!-- Assigned To ME  -->
 <br />
+
+<div class="pos_search_title">
+  <div class="title_and_export">
+    <h3>Assigned To Me ( {{count_to_me_tickets}} )</h3>
+  </div>
+  <div class="search_form">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="search_input" placeholder="Search name ...">
+        <button class='search_button' type="submit" name="search_to_me">Search</button>
+      </form>
+</div>
+
+</div>
 <div class="scroll-container">
   <div class="scroll-content">
-
-    <div class="pos_search_title">
-      <div class="title_and_export">
-        <h3>Assigned To Me ( {{count_to_me_tickets}} )</h3>
-      </div>
-
-      <div class="search_form">
-          <form method="GET" action="{% url 'home' type_user=type_user %}">
-            <input type="text" name="search_input" placeholder="Search name ...">
-            <button class='search_button' type="submit" name="search_to_me">Search</button>
-          </form>
-      </div>
-  
-    </div>
 
   <div class="firsttablecontainer">
     <table class="firsttable">
@@ -264,21 +261,21 @@
 
 <!-- CLOSED -->
 <br />
+
+<div class="pos_search_title">
+  <div class="title_and_export">
+    <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} )</h3>
+  </div>
+  <div class="search_form">
+      <form method="GET" action="{% url 'home' type_user=type_user %}">
+        <input type="text" name="search_input" placeholder="Search name ...">
+        <button class='search_button' type="submit" name="search_closed">Search</button>
+      </form>
+  </div>
+</div>
+
 <div class="scroll-container">
   <div class="scroll-content">
-
-    <div class="pos_search_title">
-      <div class="title_and_export">
-        <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} ) ) </h3>
-      </div>
-
-      <div class="search_form">
-          <form method="GET" action="{% url 'home' type_user=type_user %}">
-            <input type="text" name="search_input" placeholder="Search name ...">
-            <button class='search_button' type="submit" name="search_closed">Search</button>
-          </form>
-      </div>
-    </div>
 
   <div class="firsttablecontainer">
     <table class="firsttable">
@@ -318,6 +315,89 @@
   </div>
 </div>
 
+<!-- Users Section -->
+<br />
+
+<div id="UsersTable" >
+
+  <div class="pos_search_title">
+    <div class="title_and_export">
+      <h3>All Users ( {{count_all_users}} )</h3>
+      <button type="button" class='cancel_button' id="cancelUsersBtn" >Cancel</button>
+    </div>
+  
+    <div class="search_form">
+        <form method="GET" action="">
+          <input type="text" name="search_input_users" placeholder="Search LastName ...">
+          <button class='search_button' type="submit" name="search_users_all">Search</button>
+        </form>
+    </div>
+  </div>
+  
+  <div class="scroll-container">
+      <div class="scroll-content">
+    
+      <div class="firsttablecontainer">
+        <table class="firsttable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Username</th>
+              <th>Number</th>
+              <th>Email</th>
+              <th>Class</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for user in users_display %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td><a href="{% url 'display_user' user_id=user.id %}">{{ user.first_name}}</a></td>
+                  <td>{{ user.last_name}}</td>
+                  <td>{{ user.username}}</td>
+                  <td>{{user.number}}</td>
+                  <td>{{user.email}}</td>
+                  <td>{% if user.is_staff %} STAFF {%endif%}
+                      {% if user.is_observer %} OBSERVER {%endif%}
+                      {% if user.is_self_service %}SELF SERVICE{%endif%}
+                      {% if user.is_technician %}TECHNICIAN{%endif%}</td>
+                </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+  </div>
+
+</div>
+
 </body>
 {% endblock %}
 
+{% block script %}
+<script>
+  var UsersTable = document.getElementById('UsersTable');
+  UsersTable.style.display = 'none'
+  document.addEventListener('DOMContentLoaded', function() {
+    var showUsersBtn = document.getElementById('showUsersBtn');
+    var cancelUsersBtn = document.getElementById('cancelUsersBtn');
+
+    showUsersBtn.addEventListener('click', function() {
+        if (UsersTable.style.display === 'none' || UsersTable.style.display === '') {
+          showUsersBtn.scrollIntoView({ behavior: 'smooth' });
+          UsersTable.style.display = 'block'; // Show the solution form
+          UsersTable.style.height = UsersTable.scrollHeight + 'px';
+        }
+    });
+    cancelUsersBtn.addEventListener('click', function() {
+        if (UsersTable.style.display === 'block') {
+          UsersTable.style.height = 0;
+          setTimeout(function() {
+            UsersTable.style.display = 'none';}, 200); // Adjust timing to match the transition duration
+        }
+    });
+  });
+</script>
+{% endblock %}

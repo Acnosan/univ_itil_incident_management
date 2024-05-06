@@ -29,7 +29,7 @@
         {% endfor %}
       {% endif %}
       <div class="form" > 
-        <form class="form" action="{% url 'update_user_form' target_username=user.username %}" method="post" >
+        <form class="form" action="{% url 'update_user_form' user_id=user.id %}" method="post" >
             {% csrf_token %}
           <div class="inputBox">
             {{updated_user_form.first_name}}<i>First Name</i>
@@ -68,7 +68,7 @@
           </div>
   
           <div class="set">
-            <a href="{% url 'display_users' %}" ><button type="button">Return</button></a>
+            <a href="{% url 'display_user' user_id=user.id %}" ><button type="button">Return</button></a>
             <button type="submit">Register</button>
           </div>
         </form>

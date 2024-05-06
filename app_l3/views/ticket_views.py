@@ -14,7 +14,10 @@ def home(response,type_user):
     is_staff=is_observer=is_technician=is_self_service = None
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
+    
     search_input = response.GET.get('search_input')
+    search_input_users = response.GET.get('search_input_users')
+
     if type_user == 'staff' : 
         is_staff = True
         user = UserModel.objects.get(username=username)
@@ -94,13 +97,24 @@ def home(response,type_user):
     except:
         pass
     
+    try:    
+        users = UserModel.objects.all()
+        count_all_users = users.count()
+            
+        if 'search_users_all' in response.GET and search_input_users:
+                users = users.filter(last_name__startswith=search_input_users) 
+    except:
+        count_all_users=0
+        pass
+    
 
     context = {
     'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
     'tickets_solution_confirmed':tickets_solution_confirmed,'ticket_solutions':ticket_solutions,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
-    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'priority_filter':priority_filter}
+    'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'priority_filter':priority_filter,
+    'users_display': users,'count_all_users':count_all_users}
     return render(response, "templates/home.html", context)
 
 def add_ticket(response):
@@ -167,7 +181,7 @@ def delete_ticket(response,ticket_title):
             return HttpResponse("Object not found", status=404)
     else:
         # Handle GET requests or other methods
-        return HttpResponse("Method not allowed", status=405)
+        return HttpResponse("Method not allowed", status=401)
 
 def confirm_ticket(response,ticket_title,solution_id):
     ticket = get_object_or_404(TicketsModel, title=ticket_title)

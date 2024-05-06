@@ -1,0 +1,128 @@
+@font-face {
+    font-family: "Quicksand";
+    src: url(fonts/Quicksand-Medium.ttf);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand';
+    box-sizing: border-box;
+}
+
+.mainscreen
+{
+	display: flex;
+    flex-direction: column;
+    background-color: #DFDBE5;
+    background-image: url("../app_l3/imgs/ticket_user_display.webp");
+    color:#963E7B;
+}
+
+.card {
+	width: 70rem;
+    height: 100vh;
+    background: white;
+    position:center;
+    align-self: center;
+    top: 40rem;
+    border-radius: 1.5rem;
+    box-shadow: 4px 3px 20px #3535358c;
+    display:flex;
+    justify-content:flex-start;
+}
+
+.leftside {
+	background: #a4669b;
+	width: 10rem;
+	display: inline-flex;
+    align-items: center;
+    justify-content: center;
+	border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
+}
+
+.profilepic {
+    object-fit: cover;
+	width: 5em;
+    height: 5em;
+    border-radius: 100%;
+}
+
+.rightside {
+    background-color: #ffffff;
+	width: 60rem;
+	border-bottom-right-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    padding: 1rem 2rem 3rem 3rem;
+}
+
+p{
+    display:block;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: .8rem 0;
+    color:black;
+}
+
+
+.set {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    margin-top: 150px;
+}
+
+.set button {
+    text-decoration: none;
+    text-align: center;
+    position: relative;
+    background: rgba(89,1,91,1.00);
+    border: none;
+    outline: none;
+    padding: 5px 20px 5px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1em;
+    cursor: pointer;
+    width: 130px;
+    height: 38px;
+}
+
+#delete_btn:hover{
+    background:red;
+}
+
+.set a,.set button {
+    background: #807182;
+    border: 1px solid transparent;
+    color: white;
+}
+
+.set a:hover,.set button:hover{
+    background: #171A2B;
+}
+
+
+@media only screen and (max-width: 1000px) {
+    .card{
+        flex-direction: column;
+        width: auto;
+    }
+
+    .leftside{
+        width: 100%;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius:0;
+        border-radius:0;
+    }
+
+    .rightside{
+        width:auto;
+        border-bottom-left-radius: 1.5rem;
+        padding:0.5rem 3rem 3rem 2rem;
+        border-radius:0;
+    }
+}

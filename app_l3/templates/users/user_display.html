@@ -3,36 +3,25 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/display_style.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/display_user_style.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block title %}Display{% endblock %}
 
 {% block content %}
 
-<body style='height: 100%;'>
+<body>
     <div class="mainscreen">
         <div class="card">
-            <div class="leftside">
-            <img
-                src="https://static.vecteezy.com/system/resources/previews/025/009/619/large_2x/3d-render-abstract-simple-neon-background-ultra-violet-rays-blue-and-pink-glowing-lines-cyber-network-data-speed-of-light-space-and-time-strings-ai-generative-free-photo.jpg"
-                class="profilepic"
-                alt="pfp"
-            />
-            </div>
+            <div class="leftside"></div>
             <div class="rightside">
                 <h1>User Details</h1>
-                <div class="container">
-
-                    <div class="box">
                         <h2>(+)Firstname / Lastname </h2>
                         <p>{{ user.first_name }} / {{ user.last_name }}</p>
 
                         <h2>(+) ID / Username</h2>
                         <p>{{ user.id }} / {{ user.username }}</p>
-                    </div>  
 
-                    <div class="box">
                         <h2>(+)Number / Email</h2>
                         <p>{{ user.number }} / {{ user.email }}</p>
 
@@ -41,15 +30,12 @@
                             {% if user.is_self_service %}SELF SERVICE{%endif%}
                             {% if user.is_technician %}TECHNICIAN{%endif%}
                         </h2>
-                    </div>  
-                
-                </div>  
 
                 <div class="set">
-                    <a href="{% url 'display_users' %}" ><button type="button">Return</button></a>
-                    <a href="{% url 'update_user_form' target_username=user.username %}" style="font-size: 13px;" ><button type="submit">Update User</button></a>
+                    <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
+                    <a href="{% url 'update_user_form' user_id=user.id %}" style="font-size: 13px;" ><button type="submit">Update User</button></a>
+                    <a "{% url 'delete_user' user_id=user.id %}" style="font-size: 13px" ><button type="submit" id='delete_btn' onclick="return confirm('Are you sure you want to delete this User? note: it will only deactivate his account not fully delete from the database')" >Delete User</button></a>
                 </div>
-
             </div>
         </div>
     </div>

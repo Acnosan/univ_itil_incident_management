@@ -1,8 +1,7 @@
-from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.password_validation import password_validators_help_texts
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib import messages
 from app_l3.forms import RegisterUserForm
 from app_l3.models import UserModel,TechnicianModel,AdminModel,ObserverModel,SelfServiceModel
@@ -76,36 +75,36 @@ def register_user(response):
     context={'register_user_form': CreationForm, 'type_user': type_user}
     return render(response, "templates/register_user.html",context)
 
-def update_user(response,target_username):
+def update_user(response,user_id):
     type_user = response.session.get('type_user')
 
-    target_user = UserModel.objects.get(username=target_username)
+    target_user = UserModel.objects.get(pk=user_id)
     updated_user_form = RegisterUserForm(response.POST or None, instance=target_user)
     
     if response.method == "POST":
         if updated_user_form.is_valid():
             
             if updated_user_form.instance.is_staff:
-                if AdminModel.objects.get(username=target_username):
+                if AdminModel.objects.get(pk=user_id):
                     pass
                 else:
-                    AdminModel.objects.create(username=target_username, admin_as_user=target_user)
+                    AdminModel.objects.create(pk=user_id, admin_as_user=target_user)
             if updated_user_form.instance.is_observer:
-                if ObserverModel.objects.get(username=target_user):
+                if ObserverModel.objects.get(pk=user_id):
                     pass
                 else:
-                    ObserverModel.objects.create(username=target_username, observer_as_user=target_user)
+                    ObserverModel.objects.create(pk=user_id, observer_as_user=target_user)
                 
             if updated_user_form.instance.is_self_service:
-                if SelfServiceModel.objects.get(username=target_username):
+                if SelfServiceModel.objects.get(pk=user_id):
                     pass
                 else:
-                    SelfServiceModel.objects.create(username=target_username, self_service_as_user=target_user)
+                    SelfServiceModel.objects.create(pk=user_id, self_service_as_user=target_user)
             if updated_user_form.instance.is_technician:
-                if TechnicianModel.objects.get(username=target_username) :
+                if TechnicianModel.objects.get(pk=user_id) :
                     pass
                 else:
-                    TechnicianModel.objects.create(username=target_username, tech_as_user=target_user)
+                    TechnicianModel.objects.create(pk=user_id, tech_as_user=target_user)
             
             updated_user_form.save()
             
@@ -115,21 +114,21 @@ def update_user(response,target_username):
     context = {'updated_user_form':updated_user_form,'type_user':type_user}
     return render(response, "templates/users/user_update.html",context)
 
-def display_users(response):
-    type_user = response.session.get('type_user')
-    search_input = response.GET.get('search_input')
-    users = UserModel.objects.all()
-    count_all_users = users.count()
-    
-    if 'search_all' in response.GET and search_input:
-            users = users.filter(last_name__startswith=search_input) 
-            
-    context = {'type_user': type_user,'users_display': users,'count_all_users':count_all_users}
-    return render(response, "templates/users/users_display.html", context)
-
 def display_user(response,user_id):
     type_user = response.session.get('type_user')
     user = get_object_or_404(UserModel, pk=user_id)
 
     context = {'type_user': type_user,'user': user}
     return render(response, "templates/users/user_display.html", context)
+
+def delete_user(response,user_id):
+    if response.method == "POST":
+        try:
+            user_deletion = UserModel.objects.get(pk=user_id)
+            user_deletion.is_active == False
+            return redirect('home',type_user=response.session.get('type_user'))
+        except UserModel.DoesNotExist:
+            return HttpResponse("Object not found", status=404)
+    else:
+        # Handle GET requests or other methods
+        return HttpResponse("Method not allowed", status=401)
