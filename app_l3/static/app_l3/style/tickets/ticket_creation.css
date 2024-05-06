@@ -1,7 +1,7 @@
 @charset "utf-8";
 @font-face {
     font-family: "Quicksand";
-    src: url(fonts/Quicksand-Medium.ttf);
+    src: url(../../fonts/Quicksand-Medium.ttf);
 }
 
 body {

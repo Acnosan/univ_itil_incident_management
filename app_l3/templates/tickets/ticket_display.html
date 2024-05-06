@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/display_ticket_style.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/style/tickets/display_ticket_style.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block title %}TicketDisplay{% endblock %}
@@ -23,17 +23,18 @@
                 <h1>Ticket Details</h1>
                 <div class="container">
                     <div class="box">
-                        <h2>(+)ID : {{ ticket_display.id }}</h2>
+                        <h2>(+)ID : <p>{{ ticket_display.id }}</p></h2>
 
                         <h2>(+)Ticket Title : <p>{{ ticket_display.title }}</p></h2>
 
-                        <h2>(+)Category / Status / Priority</h2>
-                        <p>{{ ticket_display.category }} / {{ ticket_display.status }} / {{ ticket_display.priority }}</p>
+                        <h2>(+)Category / Status : <p>{{ ticket_display.category }} / {{ ticket_display.status }}</p></h2>
                     </div>  
                     <div class="box">
                         <h2>(+)Assigned to : <p>{{ ticket_display.assigned_to }}</p></h2>
 
                         <h2>(+)Assigned by : <p>{{ ticket_display.assigned_by }}</p></h2>
+
+                        <h2>(+)Priority : <p>{{ ticket_display.priority }}</p></h2>
                     </div>
                     <div class="box">
                         <h2>(+)Creation Date : <p>{{ ticket_display.ticket_creation_date }}</p> </h2>

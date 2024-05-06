@@ -2,11 +2,11 @@
 
 {% load static %}
 {% block css %}
-<link href="{% static 'app_l3/home_nav_bar.css' %}" type="text/css" rel="stylesheet" >
-<link href="{% static 'app_l3/tickets_tables.css' %}" type="text/css" rel="stylesheet" >
+<link href="{% static 'app_l3/style/tickets/home_nav_bar.css' %}" type="text/css" rel="stylesheet" >
+<link href="{% static 'app_l3/style/tickets/tickets_tables.css' %}" type="text/css" rel="stylesheet" >
 {% endblock %}
 
-{% block title %}ReTech{% endblock %}}
+{% block title %}IncidentManagement{% endblock %}}
 
 {% block navbar %}
 <nav>
@@ -329,7 +329,7 @@
     <div class="search_form">
         <form method="GET" action="">
           <input type="text" name="search_input_users" placeholder="Search LastName ...">
-          <button class='search_button' type="submit" name="search_users_all">Search</button>
+          <button class='search_button' id='search_button' type="submit" name="search_users_all">Search</button>
         </form>
     </div>
   </div>
@@ -378,6 +378,12 @@
 
 {% block script %}
 <script>
+  var search_button = document.getElementById('search_button');
+
+  search_button.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default behavior
+  });
+
   var UsersTable = document.getElementById('UsersTable');
   UsersTable.style.display = 'none'
   document.addEventListener('DOMContentLoaded', function() {

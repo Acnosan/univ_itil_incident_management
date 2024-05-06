@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Quicksand";
-  src: url(fonts/Quicksand-Medium.ttf);
+  src: url(../../fonts/Quicksand-Medium.ttf);
 }
 ::-webkit-scrollbar {
   width: 10px;
@@ -21,11 +21,6 @@
   background: #555; 
 }
 
-nav input{
-  display: none;
-}
-
-html,
 body {
   overflow-x: hidden;
   height: 100%;
@@ -37,6 +32,10 @@ body {
   background-color: #31245A;
   margin: 0;
   font-weight: 100;
+}
+
+nav input{
+  display: none;
 }
 
 .firsttablecontainer {
