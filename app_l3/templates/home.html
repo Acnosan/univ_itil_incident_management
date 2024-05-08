@@ -264,7 +264,7 @@
 
 <div class="pos_search_title">
   <div class="title_and_export">
-    <h3>Closed ( Resolved ) Tickets ( {{count_resolved_tickets}} )</h3>
+    <h3>Closed ( Confirmed Solution ) Tickets ( {{count_resolved_tickets}} )</h3>
   </div>
   <div class="search_form">
       <form method="GET" action="{% url 'home' type_user=type_user %}">
@@ -283,7 +283,7 @@
         <tr>
           <th>Ticket ID</th>
           <th>Ticket Name</th>
-          <th>Creation Date</th>
+          <th>Solution Date</th>
           <th>Category</th>
           <th>Priority</th>
           <th>Status</th>
@@ -297,9 +297,9 @@
           <td>{{event.pk}}</td>
           <td><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></td>
           <td>
-          {% for solution in ticket_solutions %}
-            {%if solution.targeted_ticket == event%}
-              {{solution.ticket_solution_date}}
+          {% for date in ticket_solutions_date %}
+            {%if date.targeted_ticket == event%}
+              {{date.ticket_solution_date}}
             {% endif %}
           {% endfor %}
           </td>
@@ -327,7 +327,7 @@
     </div>
   
     <div class="search_form">
-        <form method="GET" action="">
+        <form method="GET" action="{% url 'home' type_user=type_user %}">
           <input type="text" name="search_input_users" placeholder="Search LastName ...">
           <button class='search_button' id='search_button' type="submit" name="search_users_all">Search</button>
         </form>
@@ -348,6 +348,7 @@
               <th>Number</th>
               <th>Email</th>
               <th>Class</th>
+              <th>Activition</th>
             </tr>
           </thead>
           <tbody>
@@ -363,6 +364,8 @@
                       {% if user.is_observer %} OBSERVER {%endif%}
                       {% if user.is_self_service %}SELF SERVICE{%endif%}
                       {% if user.is_technician %}TECHNICIAN{%endif%}</td>
+                  <td>{{user.is_active}}</td>
+
                 </tr>
               {% endfor %}
           </tbody>

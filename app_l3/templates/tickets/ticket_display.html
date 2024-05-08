@@ -14,7 +14,7 @@
         <div class="card">
             <div class="leftside">
                 <img
-                src="https://static.vecteezy.com/system/resources/previews/025/009/619/large_2x/3d-render-abstract-simple-neon-background-ultra-violet-rays-blue-and-pink-glowing-lines-cyber-network-data-speed-of-light-space-and-time-strings-ai-generative-free-photo.jpg"
+                src="../../../static/app_l3/imgs/ticket_user_display.webp"
                 class="profilepic"
                 alt="pfp"
                 />
@@ -57,41 +57,40 @@
 
                     {% for solution in ticket_solution %}
                     <div class="container">
-
-                    <div class="box">
-                        <h2>Solution By :</h2>
-                        <p>{{solution.solution_by.tech_as_user.first_name}} {{solution.solution_by.tech_as_user.last_name}}</p>
-
-                        <h2>Solution State :</h2>
-                        {% if solution.confirmed_solution %}
-                            <p>Confirmed Solution</p>
-                        {% else %}
-                            <p>Not Confirmed Solution</p>
-                        {% endif %}
-                        {%if not solution.confirmed_solution %}
-                        <div class="set">
-                            <form action="{% url 'confirm_ticket' ticket_title=ticket_display.title solution_id=solution.id %}" method="post">
-                                {% csrf_token %}
-                                <a style="font-size: 13px;" ><button type="submit" name="confirm" >Confirm</button></a>
-                            </form>
-                        </div>
-                        {%else%}
+                        <div class="box">
+                            <h2>Solution By :</h2>
+                            <p>{{solution.solution_by.tech_as_user.first_name}} {{solution.solution_by.tech_as_user.last_name}}</p>
+                            <h2>Solution Date :</h2>
+                            <p>{{solution.ticket_solution_date}}</p>
+                            <h2>Solution State :</h2>
+                            {% if solution.confirmed_solution %}
+                                <p>Confirmed Solution</p>
+                            {% else %}
+                                <p>Not Confirmed Solution</p>
+                            {% endif %}
+                            {%if not solution.confirmed_solution %}
                             <div class="set">
-                                <form action="{% url 'download_solution' ticket_title=ticket_display.title  solution_id=solution.id %}" method="post">
+                                <form action="{% url 'confirm_ticket' ticket_id=ticket_display.id solution_id=solution.id %}" method="post">
                                     {% csrf_token %}
-                                    <a style="font-size: 13px;" ><button type="submit" name="confirm" >Download Solution</button></a>
+                                    <a style="font-size: 13px;" ><button type="submit" name="confirm" >Confirm</button></a>
                                 </form>
                             </div>
-                        {% endif %}
-
-                    </div>
-
-                    <div class="box">
-                        <h2>Solution Description</h2>
-                        <div class="scroll-container">
-                            <p>{{solution.solution_description}}</p>
+                            {%else%}
+                                <div class="set">
+                                    <form action="{% url 'download_solution' ticket_title=ticket_display.title  solution_id=solution.id %}" method="post">
+                                        {% csrf_token %}
+                                        <a style="font-size: 13px;" ><button type="submit" name="confirm" >Download Solution</button></a>
+                                    </form>
+                                </div>
+                            {% endif %}
                         </div>
-                    </div>
+
+                        <div class="box">
+                            <h2>Solution Description</h2>
+                            <div class="scroll-container">
+                                <p>{{solution.solution_description}}</p>
+                            </div>
+                        </div>
 
                     </div>
                     {% endfor %}  
@@ -101,7 +100,7 @@
                     <p>No Solutions For Now</p>
                 {%endif%}
 
-                <form id='solutionForm' action="pyurl 'add_solution_form' ticket_title=ticket_display.title %}" method="post">
+                <form id='solutionForm' action="{% url 'add_solution_form' ticket_id=ticket_display.id %}" method="post">
                     <h2>Add Solution : </h2>
                     {% csrf_token %}
                     <div class="description">
@@ -115,12 +114,15 @@
                 </form>
                 </br></br></br>
                 <div class="set">
-                    <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
+                    <button id="returnBtn" type="submit">Return</button>
                     <a style="font-size: 13px;" ><button type="submit" id="showSolutionBtn">Solution Form</button></a>
                     <a href="{% url 'update_ticket_form' ticket_id=ticket_display.id %}" style="font-size: 13px;" ><button type="submit" id="showSolutionBtn">Update/Assign Ticket</button></a>
-                    <a "{% url 'delete_ticket' ticket_title=ticket_display.title %}" style="font-size: 13px" ><button type="submit" id='delete_btn' onclick="return confirm('Are you sure you want to delete this ticket?')" >Delete Ticket</button></a>
-                </div>
 
+                    <form method="post" action="{% url 'delete_ticket' ticket_id=ticket_display.id %}">
+                        {% csrf_token %}
+                        <button type="submit" id="delete_btn" style="font-size: 13px" onclick="return confirm('Are you sure you want to delete this ticket?')">Delete Ticket</button>
+                    </form>
+                </div>
             </div>
             </div>
         </div>

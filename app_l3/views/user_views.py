@@ -1,10 +1,10 @@
 from django.contrib.auth.password_validation import password_validators_help_texts
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
-from django.contrib import messages
 from app_l3.forms import RegisterUserForm
-from app_l3.models import UserModel,TechnicianModel,AdminModel,ObserverModel,SelfServiceModel
+from django.contrib import messages
+from app_l3.models import *
 
 def login_user(response):
     if response.user.is_authenticated:
@@ -28,7 +28,6 @@ def login_user(response):
             if user.is_observer:
                 login(response,user=USER)
                 return redirect("home",type_user='observer')
-            
         else:
             messages.success(response,("there was Authentication error"))
             return redirect("login_form")
@@ -50,6 +49,7 @@ def register_user(response):
             password = CreationForm.cleaned_data["password"]
             hash_pass = make_password(password=password)
             CreationForm.instance.password = hash_pass
+            CreationForm.instance.is_active = True
             CreationForm.save()
             model = UserModel.objects.get(username=username)
             if CreationForm.instance.is_staff:
@@ -77,8 +77,9 @@ def register_user(response):
 
 def update_user(response,user_id):
     type_user = response.session.get('type_user')
-
+    
     target_user = UserModel.objects.get(pk=user_id)
+    activated = target_user.is_active
     updated_user_form = RegisterUserForm(response.POST or None, instance=target_user)
     
     if response.method == "POST":
@@ -100,18 +101,18 @@ def update_user(response,user_id):
                     pass
                 else:
                     SelfServiceModel.objects.create(pk=user_id, self_service_as_user=target_user)
+                    
             if updated_user_form.instance.is_technician:
                 if TechnicianModel.objects.get(pk=user_id) :
                     pass
                 else:
                     TechnicianModel.objects.create(pk=user_id, tech_as_user=target_user)
-            
             updated_user_form.save()
             
-            return redirect('user_display', type_user=type_user)
+            return redirect('display_user', user_id=target_user.id)
         
         print(updated_user_form.errors)
-    context = {'updated_user_form':updated_user_form,'type_user':type_user}
+    context = {'updated_user_form':updated_user_form,'activated':activated,'type_user':type_user}
     return render(response, "templates/users/user_update.html",context)
 
 def display_user(response,user_id):
@@ -125,7 +126,8 @@ def delete_user(response,user_id):
     if response.method == "POST":
         try:
             user_deletion = UserModel.objects.get(pk=user_id)
-            user_deletion.is_active == False
+            user_deletion.is_active = False
+            user_deletion.save()
             return redirect('home',type_user=response.session.get('type_user'))
         except UserModel.DoesNotExist:
             return HttpResponse("Object not found", status=404)

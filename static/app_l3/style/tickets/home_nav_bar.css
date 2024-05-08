@@ -358,7 +358,7 @@ nav input{
   display: none;
 }
 
-#showUsersTable{
+#UsersTable{
   transition: opacity 0.5s ease, height 0.5s ease;
   overflow: hidden;
 }

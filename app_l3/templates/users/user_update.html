@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/style/userss/register_style.css' %}" type="text/css" rel="stylesheet" />
+<link href="{% static 'app_l3/style/users/register_style.css' %}" type="text/css" rel="stylesheet" />
 <link href="{% static 'app_l3/style/users/user_perms.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
@@ -15,21 +15,10 @@
 <section>  <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
 <div class="signin"> 
     <div class="content"> 
-      <h2>Register User</h2> 
-      
-      {% if messages %}
-        {% for message in messages%}
-        <div class="alert alert-warning" id="myAlert"
-        style="padding: 10px; margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;">
-            <span class="message" style="display: inline-block;width: 600px;">{{ message }}</span>
-            <button class="close-btn" onclick="closeAlert()" 
-            style="font-size: 50px;font-weight: bold; color: #000;
-            text-shadow: 0 1px 0 #fff; cursor: pointer;border: none;background: transparent;"></button>
-        </div>
-        {% endfor %}
-      {% endif %}
+      <h2>Update User</h2> 
+
       <div class="form" > 
-        <form class="form" action="{% url 'update_user_form' user_id=user.id %}" method="post" >
+        <form class="form" action="" method="post" >
             {% csrf_token %}
           <div class="inputBox">
             {{updated_user_form.first_name}}<i>First Name</i>
@@ -66,9 +55,18 @@
               <label for="id_is_observer">observer</label>
             </div>
           </div>
+
+          {% if not activated %}
+          <div class="big_wrapper">
+            <div class="wrapper">
+              {{updated_user_form.is_active}}
+              <label for="id_is_active">Activate User</label>
+            </div>
+          </div>
+          {% endif %}
   
           <div class="set">
-            <a href="{% url 'display_user' user_id=user.id %}" ><button type="button">Return</button></a>
+            <button id="returnBtn" type="submit">Return</button>
             <button type="submit">Register</button>
           </div>
         </form>

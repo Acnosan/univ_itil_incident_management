@@ -1,14 +1,18 @@
-from django.shortcuts import render
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from app_l3.forms import PriorityFilter,AddTicketsForm,AddTicketSolutionForm
-from app_l3.models import UserModel,TicketsModel,TicketSolutionModel,TicketSolutionAttachmentModel
-from app_l3.models import TechnicianModel,AdminModel,ObserverModel,SelfServiceModel,StatusModel
+from app_l3.models import *
 from datetime import date,datetime
-import csv
 from django.conf import settings
+from django.contrib import messages
+import csv
 import os
 
 def home(response,type_user):
+    
+    if not response.user.is_active:
+        messages.success(response,("This User Is Deactivated 'Cant login' "))
+        return redirect("login_form")
+    
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
     tickets_solution_confirmed = ticket_solutions = None
     is_staff=is_observer=is_technician=is_self_service = None
@@ -37,7 +41,7 @@ def home(response,type_user):
         
     response.session['type_user'] = type_user
     try:
-        all_tickets = TicketsModel.objects.all()
+        all_tickets = TicketsModel.objects.all().order_by('id')
         
         if 'search_all' in response.GET and search_input:
             all_tickets = all_tickets.filter(title__startswith=search_input) 
@@ -53,7 +57,7 @@ def home(response,type_user):
         pass
     
     try:
-        tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user)
+        tickets_created_by_me = TicketsModel.objects.filter(assigned_by=response.user).order_by('id')
         if 'search_by_me' in response.GET and search_input:
             tickets_created_by_me = tickets_created_by_me.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
@@ -65,7 +69,7 @@ def home(response,type_user):
         except TechnicianModel.DoesNotExist:
             tech=None
             pass
-        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=tech)
+        tickets_assigned_to_me =  TicketsModel.objects.filter(assigned_to=tech).order_by('id')
         if 'search_to_me' in response.GET and search_input:
             tickets_assigned_to_me = tickets_assigned_to_me.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
@@ -78,14 +82,14 @@ def home(response,type_user):
         except StatusModel.DoesNotExist:
             status=None
             pass
-        tickets_solution_confirmed = TicketsModel.objects.filter(status=status)
+        tickets_solution_confirmed = TicketsModel.objects.filter(status=status).order_by('id')
         if 'search_closed' in response.GET and search_input:
             tickets_solution_confirmed = tickets_solution_confirmed.filter(title__startswith=search_input) 
     except TicketSolutionModel.DoesNotExist:
         pass
         
     try:
-        ticket_solutions = TicketSolutionModel.objects.filter(confirmed_solution=True)
+        ticket_solutions_date = TicketSolutionModel.objects.filter(confirmed_solution=True)
     except TicketSolutionModel.DoesNotExist:
         pass
         
@@ -98,11 +102,11 @@ def home(response,type_user):
         pass
     
     try:    
-        users = UserModel.objects.all()
+        users = UserModel.objects.all().order_by('id')
         count_all_users = users.count()
             
         if 'search_users_all' in response.GET and search_input_users:
-                users = users.filter(last_name__startswith=search_input_users) 
+                users = users.filter(last_name__startswith=search_input_users)
     except:
         count_all_users=0
         pass
@@ -111,7 +115,7 @@ def home(response,type_user):
     context = {
     'type_user':type_user,'is_staff':is_staff,'is_self_service':is_self_service,'is_observer':is_observer,'is_technician':is_technician,
     'tickets_created_by_me':tickets_created_by_me,'tickets_assigned_to_me':tickets_assigned_to_me,
-    'tickets_solution_confirmed':tickets_solution_confirmed,'ticket_solutions':ticket_solutions,
+    'tickets_solution_confirmed':tickets_solution_confirmed,'ticket_solutions_date':ticket_solutions_date,
     'count_my_tickets':count_tickets_created_by_me,'count_to_me_tickets':count_tickets_assigned_to_me,'count_resolved_tickets':count_tickets_solution_confirmed,
     'count_all_tickets':count_all_tickets,'all_tickets':all_tickets,'priority_filter':priority_filter,
     'users_display': users,'count_all_users':count_all_users}
@@ -131,7 +135,7 @@ def add_ticket(response):
             add_ticket_form.save()
             return redirect('home',type_user=response.session.get('type_user'))     
         print(add_ticket_form.errors)
-        return render(response, "template/app_l3/tickets/ticket_creation.html", {'add_ticket_form': add_ticket_form,'type_user':type_user})
+        return render(response, "templates/tickets/ticket_creation.html", {'add_ticket_form': add_ticket_form,'type_user':type_user})
     else:
         add_ticket_form = AddTicketsForm(assigned_by=response.user)
         
@@ -150,9 +154,7 @@ def console_ticket(response,ticket_id):
 
 def update_ticket(response,ticket_id):
     type_user = response.session.get('type_user')
-    is_staff = False 
-    if type_user == 'staff' : 
-        is_staff = True
+    is_staff = True if type_user == 'staff' else False
         
     ticket = TicketsModel.objects.get(pk=ticket_id)
     if response.method == 'POST':
@@ -161,6 +163,7 @@ def update_ticket(response,ticket_id):
         if update_ticket_form.is_valid():
             if update_ticket_form.instance.assigned_to is not None:
                 ticket.status = StatusModel.objects.get(status_name='ongoing')
+
             update_ticket_form.save()
             return redirect('home', type_user=type_user)
         print(update_ticket_form.errors)
@@ -171,10 +174,10 @@ def update_ticket(response,ticket_id):
     context = {'type_user': type_user,'is_staff':is_staff,'ticket_id':ticket.id,'update_ticket_form': update_ticket_form}
     return render(response, "templates/tickets/ticket_update.html", context)
 
-def delete_ticket(response,ticket_title):
+def delete_ticket(response,ticket_id):
     if response.method == "POST":
         try:
-            ticket_deletion = TicketsModel.objects.get(title=ticket_title)
+            ticket_deletion = TicketsModel.objects.get(pk=ticket_id)
             ticket_deletion.delete()
             return redirect('home',type_user=response.session.get('type_user'))
         except TicketsModel.DoesNotExist:
@@ -183,8 +186,8 @@ def delete_ticket(response,ticket_title):
         # Handle GET requests or other methods
         return HttpResponse("Method not allowed", status=401)
 
-def confirm_ticket(response,ticket_title,solution_id):
-    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+def confirm_ticket(response,ticket_id,solution_id):
+    ticket = get_object_or_404(TicketsModel, pk=ticket_id)
     ticket_solution= TicketSolutionModel.objects.get(pk=solution_id)
     if response.method == "POST":
         try:
@@ -194,7 +197,7 @@ def confirm_ticket(response,ticket_title,solution_id):
             ticket_solution.ticket_solution_date = datetime.now()
             ticket_solution.save()
             #return redirect("home", type_user=response.session.get('type_user'))
-            return redirect('console_ticket',ticket_title=ticket_title)
+            return redirect('console_ticket',ticket_id=ticket.id)
         except ticket_solution.DoesNotExist:
             return HttpResponse("Object not found", status=404)
     else:
@@ -214,7 +217,7 @@ def add_solution(response,ticket_id):
             ticket.status = StatusModel.objects.get(status_name='solved')
             ticket.save()
             solution_ticket_form.save()
-            return redirect('console_ticket',pk=ticket_id)
+            return redirect('console_ticket',ticket_id=ticket.id)
     else:
         targeted_ticket_form = AddTicketsForm(instance=ticket)
         solution_ticket_form =  AddTicketSolutionForm()
@@ -245,8 +248,8 @@ def download_solution(response,ticket_title,solution_id):
         # Handle GET requests or other methods
         return HttpResponse("Method not allowed", status=405)   
 
-def download_attachment(response, ticket_title):
-    ticket = get_object_or_404(TicketsModel, title=ticket_title)
+def download_attachment(response, ticket_id):
+    ticket = get_object_or_404(TicketsModel, pk=ticket_id)
 
     response = HttpResponse(ticket.attachment.read(), content_type='application/octet-stream')
     response['Content-Disposition'] = f'attachment; filename="{ticket.attachment.name}"'

@@ -222,3 +222,33 @@ input[type="submit"]:active,a:active
 }
 
 
+.alert {
+  position: relative;
+  padding: 10px; 
+  margin-bottom: 20px; 
+  border: 1px solid  #5a3a52; 
+  border-radius: 4px; 
+  text-align: center;
+}
+
+.message{
+  display: inline-block; 
+  width: 500px; 
+  height: 65px;
+  font-size: 20px;
+  padding: 10px 2px 2px 2px;
+  vertical-align: middle;
+}
+
+.close-btn {
+  z-index: 1; 
+  font-size: 30px; 
+  font-weight: bold; 
+  color: #a33f3f; 
+  cursor: pointer; 
+  border: none; 
+  background: transparent; 
+  float: right;
+}
+
+

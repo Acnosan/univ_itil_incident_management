@@ -9,10 +9,10 @@ class RegisterUserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Remove help text for the is_staff field
         self.fields['is_staff'].help_text = None
-        
+    
     class Meta:
         model = UserModel
-        fields = ('username','first_name','last_name','number','email','password','is_staff','is_observer','is_self_service','is_technician')
+        fields = ('username','first_name','last_name','number','email','password','is_staff','is_observer','is_self_service','is_technician','is_active')
         labels = {
             'username': '',
             'first_name': '',
@@ -24,6 +24,7 @@ class RegisterUserForm(forms.ModelForm):
             'is_observer': '',
             'is_self_service': '',
             'is_technician': '',
+            'is_active':'',
         }
         
         widgets = {
@@ -37,6 +38,7 @@ class RegisterUserForm(forms.ModelForm):
             'is_technician': forms.CheckboxInput(),
             'is_self_service': forms.CheckboxInput(),
             'is_staff':forms.CheckboxInput(),
+            'is_active':forms.CheckboxInput(),
         }
 
 class AddTicketsForm(forms.ModelForm):

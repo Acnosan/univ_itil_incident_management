@@ -20,7 +20,7 @@
         </div>
     </div>
 
-  <form action={} method="post" enctype="multipart/form-data">
+  <form action={% url 'add_ticket_form' %} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="right-container">
         <header>
@@ -74,7 +74,7 @@
         </header>
         <footer>
           <div class="set">
-            <a href="{% url 'home' type_user=type_user %}" ><button type="button">Return</button></a>
+            <button id="returnBtn" type="submit">Return</button>
             <button type="submit" >Register</button>
           </div>
         </footer>
