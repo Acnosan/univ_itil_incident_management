@@ -26,7 +26,7 @@ body {
 }
 
 .left-container {
-    background: #807182;
+    background-color: #b22727;
     overflow: hidden;
     padding: 40px 0 0 0;
     position: relative;
@@ -71,7 +71,7 @@ body {
 }
 
 .right-container {
-    background: #f8c4c4;
+    background: rgb(207, 130, 14);
     display: grid;
     grid-template-areas: "." ".";
     width: 800px;

@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
-from app_l3.forms import PriorityFilter,AddTicketsForm,AddTicketSolutionForm
+from app_l3.forms import PriorityFilter,AddTicketsForm,AddTicketSolutionForm,ConversationForm
 from app_l3.models import *
 from datetime import date,datetime
 from django.conf import settings
 from django.contrib import messages
 import csv
 import os
+from itertools import chain
+from operator import attrgetter
 
 def home(response,type_user):
     
@@ -148,8 +150,9 @@ def console_ticket(response,ticket_id):
     ticket_solution = TicketSolutionModel.objects.filter(targeted_ticket=ticket)
     
     solution_ticket_form =  AddTicketSolutionForm(response.POST)
-    
-    context = {'type_user': type_user,'ticket_display': ticket,'ticket_solution':ticket_solution,'solution_ticket_form':solution_ticket_form}
+
+    context = {'type_user': type_user,'ticket_display': ticket,'ticket_solution':ticket_solution,
+            'ticket_conversation':ticket_conversation,'solution_ticket_form':solution_ticket_form}
     return render(response, "templates/tickets/ticket_display.html", context)
 
 def update_ticket(response,ticket_id):
@@ -223,7 +226,7 @@ def add_solution(response,ticket_id):
         solution_ticket_form =  AddTicketSolutionForm()
         
     context = {'type_user':type_user,'ticket_id':ticket.id,'targeted_ticket_form':targeted_ticket_form,'solution_ticket_form':solution_ticket_form}
-    return render(response,"templates/tickets/ticket_solution.html",context)
+    return render(response,"templates/tickets/ticket_display.html",context)
 
 def download_solution(response,ticket_title,solution_id):
     ticket = get_object_or_404(TicketsModel, title=ticket_title)
@@ -280,3 +283,34 @@ def export_to_csv_by_me(request,filename):
         writer.writerow([obj.pk,obj.title,obj.description,obj.ticket_creation_date,obj.assigned_to,obj.category,obj.priority,obj.status])
 
     return response
+
+def ticket_conversation(request,ticket_id):
+    ticket = get_object_or_404(TicketsModel, pk=ticket_id)
+    assigned_to_username = 'first name : '+ticket.assigned_to.tech_as_user.first_name+' last name : '+ticket.assigned_to.tech_as_user.last_name
+    try:
+        # Get sent messages and order them by timestamp
+        conversation_history_send = ConversationModel.objects.filter(sender=request.user).order_by('timestamp')
+        # Get received messages for the specified ticket and order them by timestamp
+        conversation_history_receive = ConversationModel.objects.filter(ticket=ticket).exclude(sender=request.user).order_by('timestamp')
+        # Combine and sort messages based on timestamp
+        all_messages = sorted(
+            chain(conversation_history_receive, conversation_history_send),
+            key=attrgetter('timestamp')
+        )
+    except:
+        all_messages = None
+
+    if request.method == 'POST':
+        ticket_conversation = ConversationForm(request.POST)
+        if ticket_conversation.is_valid():
+            ticket_conversation.save(commit=False)
+            ticket_conversation.instance.ticket = ticket
+            ticket_conversation.instance.sender = request.user
+            ticket_conversation.save()
+            return redirect('ticket_conversation',ticket_id=ticket_id)
+    else:
+        ticket_conversation = ConversationForm()
+        
+    context={'ticket_conversation':ticket_conversation,'all_messages':all_messages
+            ,'assigned_to_username':assigned_to_username}
+    return render(request, 'templates/tickets/ticket_conversation.html',context)

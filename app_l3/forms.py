@@ -1,7 +1,6 @@
 from django import forms
-from .models import UserModel,TechnicianModel
-from .models import TicketsModel,TicketSolutionModel
-from .models import CategoryModel,PriorityModel,StatusModel
+from .models import *
+
 
 class RegisterUserForm(forms.ModelForm):
 
@@ -155,3 +154,15 @@ class AddTicketSolutionForm(forms.ModelForm):
 class PriorityFilter(forms.Form):
     filter_value = forms.ModelChoiceField(queryset=PriorityModel.objects.all(), empty_label="Select Priority",
                                         label='',widget=forms.Select(attrs={'class': 'filter_form'}))
+
+class ConversationForm(forms.ModelForm):
+    
+    class Meta:
+        model = ConversationModel
+        fields = ('content',)
+        label={
+            'content':''
+        }
+        widgets={
+            'content' : forms.TextInput()
+        }

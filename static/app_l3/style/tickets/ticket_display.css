@@ -3,25 +3,38 @@
     src: url(../../fonts/Quicksand-Medium.ttf);
 }
 
-html, body {
+* {
     margin: 0;
     padding: 0;
-    font-family: 'Quicksand';
-    box-sizing: border-box;
 }
+
+body {
+    font-family: 'Quicksand';
+	box-sizing: border-box;
+}
+
+  /* Style for the container holding the divs */
+.container {
+    display: flex; /* Use flexbox layout */
+  }
+
+  /* Style for individual divs */
+.box {
+    width: 100%; /* Each div takes 50% width of the container */
+    padding: 10px;
+    box-sizing: border-box; /* Includes padding in the width calculation */
+    border: 2px solid #ccc;
+  }
 
 .mainscreen
 {
 	display: flex;
     flex-direction: column;
-    background-color: #DFDBE5;
-    background-image: url("../app_l3/imgs/ticket_user_display.webp");
-    color:#963E7B;
+    background: rgb(207, 130, 14);
 }
 
 .card {
 	width: 70rem;
-    height: 100vh;
     background: white;
     position:center;
     align-self: center;
@@ -33,7 +46,7 @@ html, body {
 }
 
 .leftside {
-	background: #a4669b;
+    background-color: #b22727;
 	width: 10rem;
 	display: inline-flex;
     align-items: center;
@@ -59,7 +72,7 @@ html, body {
 
 p{
     display:block;
-    font-size: 1.1rem;
+    font-size: 1.35rem;
     font-weight: 400;
     margin: .8rem 0;
     color:black;
@@ -70,14 +83,13 @@ p{
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
-    margin-top: 120px;
 }
 
 .set button {
     text-decoration: none;
     text-align: center;
     position: relative;
-    background: rgba(89,1,91,1.00);
+    background-color: #b22727;
     border: none;
     outline: none;
     padding: 5px 20px 5px;
@@ -91,19 +103,47 @@ p{
 }
 
 #delete_btn:hover{
-    background:red;
+    background:rgb(102, 51, 255);
 }
 
 .set a,.set button {
-    background: #807182;
+    background-color: #b22727;
     border: 1px solid transparent;
-    color: white;
+    color: black;
 }
 
 .set a:hover,.set button:hover{
-    background: #171A2B;
+    background-color: #505050;
 }
 
+.scroll-container {
+    width: 100%;
+    height: 200px;
+    padding-left: 8px;
+    overflow: hidden;
+    outline: none;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    position: relative; 
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent; 
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+
+#solutionForm{
+    display: none;
+}
 
 @media only screen and (max-width: 1000px) {
     .card{

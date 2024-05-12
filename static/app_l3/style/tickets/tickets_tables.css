@@ -29,7 +29,7 @@ body {
 }
 
 body {
-  background-color: #31245A;
+  background-color: #ffffff;
   margin: 0;
   font-weight: 100;
 }
@@ -54,22 +54,20 @@ nav input{
   overflow: hidden;
   box-shadow: 0 0 20px color: (white);}
 
-th,td {
-  padding: 15px;
-  background-color: rgba(200,137,195,1.00);
-  color: #000000;
-}
-th {
-  text-align: left;
-}
 thead th {
-  background-color: rgba(89,1,91,1.00);
+  text-align: left;
+  color: black;
+  padding: 15px;
+  background-color: rgb(207, 130, 14);
 }
+
 tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
 tbody td {
+  padding: 15px;
   position: relative;
+  background-color: #b22727;
 }
 
 
@@ -89,7 +87,7 @@ tbody td {
   display: flex;
   align-items: center; 
   justify-content: space-between;
-  background-color: rgba(89,1,91,1.00);
+  background: rgb(207, 130, 14);
   border: 1px solid #ccc;
 }
 
@@ -110,12 +108,12 @@ tbody td {
 
 .search_form input,.filter_form select{
   position: relative;
-  background: rgba(90, 1, 91, 0.808);
-  border: 1px solid #ccc;
+  background-color: #505050;
+  color: white;
+  border: 1px solid #000000;
   outline: none;
   padding: 5px 20px 5px;
   border-radius: 4px;
-  color: #fff;
   font-weight: 250;
   font-size: 1em;
   cursor: pointer;
@@ -124,17 +122,17 @@ tbody td {
 
 .search_form input::placeholder,
 .filter_form select::placeholder {
-  color: rgba(0, 0, 0, 0.61); 
+  color: white;
 }
 
 .search_form .search_button,.export_button button, .filter_button,.cancel_button{
   position: relative;
-  background: rgba(89,1,91,1.00);
-  border: 1px solid #ccc;
+  background-color: #505050;
+  color: white;
+  border: 1px solid #000000;
   outline: none;
   padding: 5px 20px 5px;
   border-radius: 4px;
-  color: #fff;
   font-weight: 500;
   font-size: 1em;
   cursor: pointer;

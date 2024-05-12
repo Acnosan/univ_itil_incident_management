@@ -8,7 +8,7 @@
     margin: 0;
     display: grid;
     place-items: center;
-    background-color: whitesmoke;
+    background: rgb(207, 130, 14);
     font-family: 'retroica';
   }
   a{
@@ -69,8 +69,7 @@
     height: 50px;
     border-radius: 0.5rem;
     border: 0;
-    background: #216ce7;
-    color: #f9f9f9;
+    background-color: #b22727;
     text-align: center;
     letter-spacing: 3px;
   }

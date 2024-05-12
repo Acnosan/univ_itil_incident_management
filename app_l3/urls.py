@@ -28,6 +28,7 @@ urlpatterns = [
     path("priority/create/",classification_views.add_priority,name="add_priority_form"),
     path("status/create",classification_views.add_status,name="add_status_form"),
     
+    path('ticket/conversation/<int:ticket_id>',ticket_views.ticket_conversation,name='ticket_conversation')
 ]
 
 

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+<link href="{% static 'app_l3/style/tickets/ticket_conversation.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block title %}convo{% endblock %}
+
+
+{%  block content %}
+
+<div class="chat-card">
+    <div class="chat-header">
+     <div class="h2">{{assigned_to_username}}</div>
+    </div>
+
+    <div class="chat-body">
+        {% for hist in all_messages %}
+          {% if hist.sender == request.user %}
+            <div class="message outgoing">
+              <p>{{ hist.content }}</p>
+            </div>
+          {% else %}
+            <div class="message incoming">
+              <p>{{ hist.content }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    <form action="" method="POST" >
+        {% csrf_token %}
+        <div class="chat-footer">
+            <button id="returnBtn" type="submit">Return</button>
+            {{ticket_conversation.content}}
+            <button type="submit">Register</button>
+
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

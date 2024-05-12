@@ -3,22 +3,16 @@
 {% load static %}
 
 {% block css%}
-<link href="{% static 'app_l3/style/tickets/display_ticket_style.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'app_l3/style/tickets/ticket_display.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
-{% block title %}TicketDisplay{% endblock %}
+{% block title %}Ticket{% endblock %}
 
 {% block content %}
 <body>
     <div class="mainscreen">
         <div class="card">
-            <div class="leftside">
-                <img
-                src="../../../static/app_l3/imgs/ticket_user_display.webp"
-                class="profilepic"
-                alt="pfp"
-                />
-            </div>
+            <div class="leftside"></div>
             <div class="rightside">
                 <h1>Ticket Details</h1>
                 <div class="container">
@@ -115,6 +109,11 @@
                 </br></br></br>
                 <div class="set">
                     <button id="returnBtn" type="submit">Return</button>
+                    
+                    {% if ticket_display.assigned_to is not None %}
+                    <a href="{% url 'ticket_conversation' ticket_id=ticket_display.id %}" style="font-size: 13px;" ><button type="submit" >Conversation</button></a>
+                    {% endif %}
+                    
                     <a style="font-size: 13px;" ><button type="submit" id="showSolutionBtn">Solution Form</button></a>
                     <a href="{% url 'update_ticket_form' ticket_id=ticket_display.id %}" style="font-size: 13px;" ><button type="submit" id="showSolutionBtn">Update/Assign Ticket</button></a>
 
@@ -149,6 +148,7 @@
         var showSolutionBtn = document.getElementById('showSolutionBtn');
         var solutionForm = document.getElementById('solutionForm');
         var cancelSolutionBtn = document.getElementById('cancelSolutionBtn');
+
         showSolutionBtn.addEventListener('click', function() {
             if (solutionForm.style.display === 'none' || solutionForm.style.display === '') {
                 solutionForm.style.display = 'block'; // Show the solution form

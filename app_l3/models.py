@@ -167,4 +167,12 @@ class TicketSolutionAttachmentModel(models.Model):
     class Meta:
         db_table = 'tickets_solutions_attachment_table'
 
+class ConversationModel(models.Model):
+    ticket = models.ForeignKey(TicketsModel, on_delete=models.CASCADE, blank=False, null=False)
+    sender = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='sent_messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']  # Ensure conversations are ordered by timestamp
 
