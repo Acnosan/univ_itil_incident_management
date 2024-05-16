@@ -16,7 +16,7 @@ def home(response,type_user):
         return redirect("login_form")
     
     tickets_created_by_me = tickets_assigned_to_me = all_tickets = None 
-    tickets_solution_confirmed = ticket_solutions = None
+    tickets_solution_confirmed = ticket_solutions_date = None
     is_staff=is_observer=is_technician=is_self_service = None
     count_tickets_created_by_me=count_tickets_assigned_to_me=count_tickets_solution_confirmed=count_all_tickets=0
     username = response.user.username
@@ -269,7 +269,25 @@ def download_attachment(response, ticket_id):
 def export_to_csv_by_me(request,filename):
     rows = ["id","title","description","creation date","assigned to","category","priority","status"]
     try:
-        queryset = TicketsModel.objects.filter(assigned_by=request.user)
+        queryset = TicketsModel.objects.filter(assigned_by=request.user).order_by('id')
+    except TicketSolutionModel.DoesNotExist:
+        pass
+    
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    writer = csv.writer(response)
+    writer.writerow(rows)  # Write header row
+    
+    for obj in queryset:
+        writer.writerow([obj.pk,obj.title,obj.description,obj.ticket_creation_date,obj.assigned_to,obj.category,obj.priority,obj.status])
+
+    return response
+
+def export_to_csv_all(response,filename):
+    rows = ["id","title","description","creation date","assigned to","category","priority","status"]
+    try:
+        queryset = TicketsModel.objects.all().order_by('id')
     except TicketSolutionModel.DoesNotExist:
         pass
     

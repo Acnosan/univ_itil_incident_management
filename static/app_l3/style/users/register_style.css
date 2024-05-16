@@ -192,7 +192,7 @@ input[type="submit"]:active,a:active
   margin: 10px 0;
 }
 
-.set button {
+.set button, .set a {
   text-decoration: none;
   text-align: center;
   position: relative;

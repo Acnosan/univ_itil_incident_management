@@ -85,25 +85,16 @@ p{
     margin: 10px 0;
 }
 
-.set button {
+.set button,.set a {
     text-decoration: none;
     text-align: center;
     position: relative;
     background-color: #b22727;
-    border: none;
-    outline: none;
-    padding: 5px 20px 5px;
     border-radius: 4px;
-    color: #fff;
-    font-weight: 500;
     font-size: 1em;
     cursor: pointer;
     width: 130px;
     height: 38px;
-}
-
-#delete_btn:hover{
-    background:rgb(102, 51, 255);
 }
 
 .set a,.set button {
@@ -143,6 +134,10 @@ textarea {
 
 #solutionForm{
     display: none;
+}
+
+#delete_btn:hover{
+    background:rgb(102, 51, 255);
 }
 
 @media only screen and (max-width: 1000px) {

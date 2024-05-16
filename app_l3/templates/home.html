@@ -18,7 +18,7 @@
 
     <ul class="nav-links">
       <li>
-        <a href="#" class="desktop-item">{{user.username}}</a>
+        <a href="#" class="desktop-item">{{user.last_name}}</a>
         <ul class="drop-menu">
           <li><a href="{% url 'logout_user' %}">Logout</a></li>  
 
@@ -117,9 +117,9 @@
           <tbody>
               {% for user in users_display %}
                 <tr>
-                  <td>{{ user.id }}</td>
-                  <td><a href="{% url 'display_user' user_id=user.id %}">{{ user.first_name}}</a></td>
-                  <td>{{ user.last_name}}</td>
+                  <td><b>{{ user.id }}</b></td>
+                  <td><b><a href="{% url 'display_user' user_id=user.id %}">{{ user.first_name}}</a></b></td>
+                  <td><b>{{ user.last_name}}</b></td>
                   <td>{{ user.username}}</td>
                   <td>{{user.number}}</td>
                   <td>{{user.email}}</td>
@@ -145,6 +145,9 @@
 <div class="pos_search_title">
   <div class="title_and_export">
     <h3>All The Tickets ( {{count_all_tickets}} )</h3>
+    {% if user.is_staff %}
+    <a href="{% url 'export_to_csv_all' filename='all_tickets.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
+    {% endif %}
   </div>
   <div class="search_form">
       <form method="GET" action="{% url 'home' type_user=type_user %}">
@@ -180,9 +183,9 @@
           {% for event in all_tickets %}
           {% if event.status.status_name != 'closed'%}
             <tr>
-              <td>{{event.pk}}</td>
-              <td><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></td>
-              <td> {{event.ticket_creation_date}}</td>
+              <td><b>{{event.pk}}</b></td>
+              <td><b><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></b></td>
+              <td>{{event.ticket_creation_date}}</td>
               {% if event.assigned_to is not None %}
               <td> {{event.assigned_to}}</td>
               {% else %}
@@ -211,7 +214,7 @@
   <div class="title_and_export">
     <h3> Created By Me ( {{count_my_tickets}} ) </h3>
     {% if user.is_staff %}
-    <a href="{% url 'export_to_csv' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
+    <a href="{% url 'export_to_csv_by_me' filename='created_by_me.csv' %}" class='export_button'><button type="button">Export Csv</button></a>
     {% endif %}
   </div>
   <div class="search_form">
@@ -244,8 +247,8 @@
         {% for event in tickets_created_by_me %}
         {% if event.status.status_name != 'closed' %}
         <tr>
-          <td>{{event.pk}}</td>
-          <td><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></td>
+          <td><b>{{event.pk}}</b></td>
+          <td><b><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></b></td>
           <td> {{event.ticket_creation_date}}</td>
           {% if event.assigned_to is not None %}
           <td> {{event.assigned_to}}</td>
@@ -302,8 +305,8 @@
         {% for event in tickets_assigned_to_me %}
         {% if event.status.status_name != 'closed' %}
         <tr>
-          <td>{{event.pk}}</td>
-          <td><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></td>
+          <td><b>{{event.pk}}</b></td>
+          <td><b><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></b></td>
           <td> {{event.ticket_creation_date}}</td>
           <td>{{event.category}}</td>
           <td>{{event.priority}}</td>
@@ -352,8 +355,8 @@
         {% for event in tickets_solution_confirmed %}
         {% if event.status.status_name == 'closed' %}
         <tr>
-          <td>{{event.pk}}</td>
-          <td><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></td>
+          <td><b>{{event.pk}}</b></td>
+          <td><b><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></b></td>
           <td>
           {% for date in ticket_solutions_date %}
             {%if date.targeted_ticket == event%}

@@ -148,17 +148,7 @@ label{
     padding: 5px 40px;
 }
 
-.right-container footer button {
-    border: 1px solid rgba(0,0,0,.2);
-    height: 38px;
-    line-height: 38px;
-    width: 100px;
-    border-radius: 19px;
-    text-decoration: none;
-    text-align: center;
-}
-
-a {
+.right-container footer button,.right-container footer a{
     border: 1px solid rgba(0,0,0,.2);
     height: 38px;
     line-height: 38px;
@@ -174,24 +164,16 @@ a {
 }
 
 
-.right-container footer a {
-    background: #807182;
+.right-container footer .set button,.right-container footer .set a {
+    background-color: #b22727;
     border: 1px solid transparent;
+    color: black;
+}
+
+.right-container footer .set button:hover,.right-container footer .set a:hover {
+    background-color: #505050;
     color: white;
-}
-
-.right-container footer a:hover {
-    background: #171A2B;
-}
-
-.right-container footer #next {
-    background: #807182;
-    border: 1px solid transparent;
-    color: white;
-}
-
-.right-container footer #next:hover {
-    background: #171A2B;
+    cursor: pointer;
 }
 
 .prob-name label, .systemtype label, .technic label,  .probprior label, .status label, .description label .attachment label {

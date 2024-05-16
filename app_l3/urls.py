@@ -22,8 +22,8 @@ urlpatterns = [
     
     path("ticket/solution/download-<str:ticket_title>-<int:solution_id>/",ticket_views.download_solution,name="download_solution"),
     path('download-attachment/<int:ticket_id>/', ticket_views.download_attachment, name='download_attachment'),
-    path("export/<str:filename>",ticket_views.export_to_csv_by_me,name="export_to_csv"),
-    
+    path("export/<str:filename>",ticket_views.export_to_csv_by_me,name="export_to_csv_by_me"),
+    path("export/<str:filename>",ticket_views.export_to_csv_all,name="export_to_csv_all"),
     path("category/create/",classification_views.add_category,name="add_category_form"),
     path("priority/create/",classification_views.add_priority,name="add_priority_form"),
     path("status/create",classification_views.add_status,name="add_status_form"),
