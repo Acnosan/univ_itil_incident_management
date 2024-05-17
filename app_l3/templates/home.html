@@ -140,7 +140,7 @@
 </div>
 
 <!-- ALL -->
-{% if user.is_staff %}
+{% if is_staff or is_observer %}
 
 <div class="pos_search_title">
   <div class="title_and_export">
@@ -187,7 +187,7 @@
               <td><b><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></b></td>
               <td>{{event.ticket_creation_date}}</td>
               {% if event.assigned_to is not None %}
-              <td> {{event.assigned_to}}</td>
+              <td>{{event.assigned_to}}</td>
               {% else %}
               <td>Not Assigned</td>
               {% endif %}
@@ -208,7 +208,7 @@
 
 <!-- Created By Me -->
 <br />
-{% if not is_technician %}
+{% if not is_technician and not is_observer %}
 
 <div class="pos_search_title">
   <div class="title_and_export">
@@ -249,9 +249,9 @@
         <tr>
           <td><b>{{event.pk}}</b></td>
           <td><b><a href="{% url 'console_ticket' ticket_id=event.id %}">{{event.title}}</a></b></td>
-          <td> {{event.ticket_creation_date}}</td>
+          <td>{{event.ticket_creation_date}}</td>
           {% if event.assigned_to is not None %}
-          <td> {{event.assigned_to}}</td>
+          <td>{{event.assigned_to}}</td>
           {% else %}
           <td>Not Assigned</td>
           {% endif %}
@@ -272,6 +272,7 @@
 
 <!-- Assigned To ME  -->
 <br />
+{% if is_technician or is_staff %}
 
 <div class="pos_search_title">
   <div class="title_and_export">
@@ -307,7 +308,7 @@
         <tr>
           <td><b>{{event.pk}}</b></td>
           <td><b><a href="{% url 'console_ticket' ticket_id=event.id  %}">{{event.title}}</a></b></td>
-          <td> {{event.ticket_creation_date}}</td>
+          <td>{{event.ticket_creation_date}}</td>
           <td>{{event.category}}</td>
           <td>{{event.priority}}</td>
           <td>{{event.status}}</td>
@@ -319,6 +320,8 @@
   </div>
   </div>
 </div>
+
+{% endif %}
 
 <!-- CLOSED -->
 <br />

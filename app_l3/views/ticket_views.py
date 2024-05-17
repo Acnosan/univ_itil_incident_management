@@ -267,7 +267,7 @@ def download_attachment(response, ticket_id):
     return response
 
 def export_to_csv_by_me(request,filename):
-    rows = ["id","title","description","creation date","assigned to","category","priority","status"]
+    rows = ["id","title","description","creation_date","assigned_to","category","priority","status"]
     try:
         queryset = TicketsModel.objects.filter(assigned_by=request.user).order_by('id')
     except TicketSolutionModel.DoesNotExist:
@@ -280,12 +280,21 @@ def export_to_csv_by_me(request,filename):
     writer.writerow(rows)  # Write header row
     
     for obj in queryset:
-        writer.writerow([obj.pk,obj.title,obj.description,obj.ticket_creation_date,obj.assigned_to,obj.category,obj.priority,obj.status])
+        writer.writerow([
+            obj.pk,
+            obj.title,
+            obj.description,
+            obj.ticket_creation_date,
+            obj.assigned_to,
+            obj.category,
+            obj.priority,
+            obj.status
+        ])
 
     return response
 
 def export_to_csv_all(response,filename):
-    rows = ["id","title","description","creation date","assigned to","category","priority","status"]
+    rows = ["id","title","description","creation_date","assigned_by","assigned_to","category","priority","status"]
     try:
         queryset = TicketsModel.objects.all().order_by('id')
     except TicketSolutionModel.DoesNotExist:
@@ -298,7 +307,17 @@ def export_to_csv_all(response,filename):
     writer.writerow(rows)  # Write header row
     
     for obj in queryset:
-        writer.writerow([obj.pk,obj.title,obj.description,obj.ticket_creation_date,obj.assigned_to,obj.category,obj.priority,obj.status])
+        writer.writerow([
+            obj.pk,
+            obj.title,
+            obj.description,
+            obj.ticket_creation_date,
+            obj.assigned_by,
+            obj.assigned_to,
+            obj.category,
+            obj.priority,
+            obj.status
+        ])
 
     return response
 

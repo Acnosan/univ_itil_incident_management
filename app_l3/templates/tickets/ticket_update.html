@@ -13,7 +13,7 @@
     <div class="left-container">
         <h1>
           <i class="fas fa-paw"></i>
-          UPDATE TICKET
+          TICKET UPDATE
         </h1>
         <div class="puppy">
           <img src="../../../static/app_l3/imgs/ticketCreation.png" />
@@ -23,29 +23,31 @@
       {% csrf_token %}
       <div class="right-container">
           <header>
-            <h1>Spécifiez les information de ticket</h1>
+            <h1>Provide the informations below</h1>
             <div class="set">
               <div class="prob-name">
-                <label for="prob-name">Nom de Ticket :</label>
+                <label for="prob-name">Ticket Name :</label>
                   {{ update_ticket_form.title }}
               </div>
             </div>
   
             <div class="set">
               <div class="systemtype">
-                <label for="systemtype">Actif Informatique Ciblé :</label>
+                <label for="systemtype">Targeted IT Asset:</label>
                   {{ update_ticket_form.category }}
               </div>
-              {% if is_staff %}
+              {%  if type_user == 'self_service' %}
               <div class="technic">
-                <label for="technic">Technicien :</label>
+                <label for="technic">Technician :</label>
                   {{ update_ticket_form.assigned_to }}
               </div>
-              <div class="status">
-                <label for="status">Status :</label>
-                  {{ update_ticket_form.status }}
+              {% endif %} 
+              
+              {% if is_staff %}
+              <div class="technic">
+                <label for="technic">Technician :</label>
+                  {{ update_ticket_form.assigned_to }}
               </div>
-              {% else %}
               <div class="status">
                 <label for="status">Status :</label>
                   {{ update_ticket_form.status }}
@@ -60,13 +62,13 @@
                   {{ update_ticket_form.priority }}
               </div>
               <div class="attachment">
-                <label for="attachment">attachment :</label>
+                <label for="attachment">Attachment :</label>
                   {{update_ticket_form.attachment}} 
               </div>
             </div>
   
             <div class="description">
-              <label for="description">description :</label>
+              <label for="description">Description :</label>
                 {{ update_ticket_form.description }}
             </div>
             
