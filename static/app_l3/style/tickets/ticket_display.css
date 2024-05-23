@@ -100,7 +100,7 @@ p{
 .set a,.set button {
     background-color: #b22727;
     border: 1px solid transparent;
-    color: black;
+    color: white;
 }
 
 .set a:hover,.set button:hover{

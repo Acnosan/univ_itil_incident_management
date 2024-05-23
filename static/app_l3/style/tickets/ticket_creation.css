@@ -35,7 +35,7 @@ body {
 }
 
 .left-container h1 {
-    color: rgba(0,0,0,.8);
+    color: rgba(255, 255, 255, 0.8);
     display: inline-block;
     font-size: 24px;
 }
@@ -78,7 +78,7 @@ body {
 }
 
 .right-container h1:nth-of-type(1) {
-    color: rgba(0,0,0,.8);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 28px;
     font-weight: 600;
 }
@@ -90,7 +90,7 @@ body {
 }
 
 .right-container input {
-    border: 1px solid rgba(0,0,0,.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     height: 38px;
     line-height: 38px;
