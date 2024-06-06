@@ -167,12 +167,12 @@ label{
 .right-container footer .set button,.right-container footer .set a {
     background-color: #b22727;
     border: 1px solid transparent;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 .right-container footer .set button:hover,.right-container footer .set a:hover {
     background-color: #505050;
-    color: white;
+    color: rgb(255, 178, 114);
     cursor: pointer;
 }
 
